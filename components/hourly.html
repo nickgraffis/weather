@@ -1,0 +1,10 @@
+  ${weather.hourly.map(function (element, i) {
+    return `
+    <div class="flex flex-col text-center text-gray-500 font-semibold justify-center mx-2 p-4 ${i === 0 ? 'bg-white rounded-lg shadow-lg' : ''}" style="flex: 0 0 auto;">
+      <span class="text-sm">${i === 0 ? 'NOW' : element.time}</span>
+      <span class="text-md">${element.icon ? `<img class="inline-block align-middle h-10 w-10" src="/icons/${element.icon}.png" />` : ''}
+</span>
+      <span class="text-md">${element.temp}°</span>
+    </div>
+    `;
+  }).join('')}

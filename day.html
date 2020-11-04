@@ -1,0 +1,113 @@
+<svg class="wave" style="position: absolute; top: 35%; z-index: -10" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 320"><path fill="rgb(156, 204, 240)" fill-opacity="1" d="M0,128L13.3,117.3C26.7,107,53,85,80,106.7C106.7,128,133,192,160,208C186.7,224,213,192,240,192C266.7,192,293,224,320,234.7C346.7,245,373,235,400,213.3C426.7,192,453,160,480,144C506.7,128,533,128,560,117.3C586.7,107,613,85,640,85.3C666.7,85,693,107,720,144C746.7,181,773,235,800,229.3C826.7,224,853,160,880,122.7C906.7,85,933,75,960,74.7C986.7,75,1013,85,1040,85.3C1066.7,85,1093,75,1120,101.3C1146.7,128,1173,192,1200,202.7C1226.7,213,1253,171,1280,176C1306.7,181,1333,235,1360,224C1386.7,213,1413,139,1427,101.3L1440,64L1440,320L1426.7,320C1413.3,320,1387,320,1360,320C1333.3,320,1307,320,1280,320C1253.3,320,1227,320,1200,320C1173.3,320,1147,320,1120,320C1093.3,320,1067,320,1040,320C1013.3,320,987,320,960,320C933.3,320,907,320,880,320C853.3,320,827,320,800,320C773.3,320,747,320,720,320C693.3,320,667,320,640,320C613.3,320,587,320,560,320C533.3,320,507,320,480,320C453.3,320,427,320,400,320C373.3,320,347,320,320,320C293.3,320,267,320,240,320C213.3,320,187,320,160,320C133.3,320,107,320,80,320C53.3,320,27,320,13,320L0,320Z"></path></svg>
+<div class="grid h-screen">
+  <div class="flex justify-between m-4">
+    <span class="text-center text-blue-700 text-sm"><i class="fas fa-bars"></i></span>
+    <img class="object-contain h-12 w-12 rounded" src="img/lion.png">
+  </div>
+  <div class="place-self-center flex flex-col pt-4" style="margin-top: -100px;">
+    <span class="text-center text-blue-700 text-xl font-extrabold">${response.name}</span>
+    <span class="text-center text-blue-700 text-lg">${response.weather[0].description}</span>
+  </div>
+  <div class="place-self-center">
+    <svg style="height: 70vw;" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+      <path fill="#FF0066" d="M42.7,-71.8C55.3,-66.6,65.7,-55.2,72,-42.3C78.3,-29.3,80.6,-14.6,78.9,-1C77.2,12.7,71.6,25.4,65.1,38.1C58.6,50.7,51.3,63.4,40.3,70.4C29.3,77.4,14.6,78.8,-1,80.5C-16.6,82.2,-33.1,84.1,-45.2,77.8C-57.4,71.4,-65,56.7,-72.8,42.3C-80.6,28,-88.6,14,-89,-0.2C-89.5,-14.5,-82.3,-28.9,-73.9,-42.2C-65.5,-55.6,-55.8,-67.8,-43.3,-73.1C-30.8,-78.4,-15.4,-76.7,-0.2,-76.4C15,-76,30,-76.9,42.7,-71.8Z" transform="translate(100 100)" />
+    </svg>
+  </div>
+  <div class="flex justify-between">
+    <span class="text-blue-200 text-6xl text-extrabold px-4"style="margin-top: -200px; font-size: 125px; -webkit-text-stroke: 2px rgb(59, 108, 171)">${Math.floor((response.main.temp - 273.15) * 9/5 + 32)}°</span>
+    <span class="text-gray-500 text-3xl px-4" style="margin-top: -50px;"><strong  class="text-blue-700">${Math.floor((response.main.temp_max - 273.15) * 9/5 + 32)}°</strong> ${Math.floor((response.main.temp_min - 273.15) * 9/5 + 32)}°</span>
+  </div>
+  <div class="flex temp" style="flex-wrap: nowrap; overflow-x: auto;">
+    <div class="flex flex-col text-center mx-4" style="flex: 0 0 auto; ">
+      <div class="bg-gray-300 rounded-xl h-14 w-24 flex flex-col text-right p-2">
+        <span class="text-xs text-gray-600">WIND</span>
+        <span class="text-xs text-gray-700 font-semibold">${response.wind.speed} mph</span>
+      </div>
+    </div>
+    <div class="flex flex-col text-center mx-4" style="flex: 0 0 auto; ">
+      <div class="bg-gray-300 rounded-xl h-14 w-24 flex flex-col text-right p-2">
+        <span class="text-xs text-gray-600">HUMIDITY</span>
+        <span class="text-xs text-gray-700 font-semibold">${response.main.humidity}%</span>
+      </div>
+    </div>
+    <div class="flex flex-col text-center mx-4" style="flex: 0 0 auto; ">
+      <div class="bg-gray-300 rounded-xl h-14 w-24 flex flex-col text-right p-2">
+        <span class="text-xs text-gray-600">FEELS LIKE</span>
+        <span class="text-xs text-gray-700 font-semibold">${Math.floor((response.main.feels_like - 273.15) * 9/5 + 32)}°</span>
+      </div>
+    </div>
+    <div class="flex flex-col text-center mx-4" style="flex: 0 0 auto; ">
+      <div class="bg-gray-300 rounded-xl h-14 w-24 flex flex-col text-right p-2">
+        <span class="text-xs text-gray-600">RAIN</span>
+        <span class="text-xs text-gray-700 font-semibold">4%</span>
+      </div>
+    </div>
+  </div>
+  <div class="flex justify-between bg-blue-300 pt-8">
+    <p class="text-blue-500 text-md font-extrabold mx-4"><span class="border-b-4 border-blue-700 border-opacity-50">Tuesday</span>, Today</p>
+    <p class="text-blue-500 text-md font-extrabold mx-4"><i class="fas fa-chevron-right"></i></p>
+  </div>
+  <div class="flex temp bg-blue-300 px-4" style="flex-wrap: nowrap; overflow-x: auto;">
+    <div class="flex flex-col text-center text-blue-100" style="flex: 0 0 auto; ">
+      <span class="text-sm">9 AM</span>
+      <span class="text-md"><i class="fas fa-cloud-sun-rain"></i></span>
+      <span class="text-md">24°</span>
+    </div>
+    <div class="flex flex-col text-center mx-4 text-blue-100" style="flex: 0 0 auto; ">
+      <span class="text-md ">9 AM</span>
+      <span class="text-md "><i class="fas fa-cloud-sun-rain"></i></span>
+      <span class="text-md ">24°</span>
+    </div>
+    <div class="flex flex-col text-center mx-4 text-blue-100" style="flex: 0 0 auto; ">
+      <span class="text-md ">9 AM</span>
+      <span class="text-md "><i class="fas fa-cloud-sun-rain"></i></span>
+      <span class="text-md ">24°</span>
+    </div>
+    <div class="flex flex-col text-center mx-4 text-blue-100" text-blue-100 style="flex: 0 0 auto; ">
+      <span class="text-md ">9 AM</span>
+      <span class="text-md "><i class="fas fa-cloud-sun-rain"></i></span>
+      <span class="text-md ">24°</span>
+    </div>
+    <div class="flex flex-col text-center mx-4 text-blue-100" style="flex: 0 0 auto; ">
+      <span class="text-md ">10 AM</span>
+      <span class="text-md "><i class="fas fa-cloud-sun-rain"></i></span>
+      <span class="text-md ">24°</span>
+    </div>
+    <div class="flex flex-col text-center mx-4 text-blue-100" style="flex: 0 0 auto; ">
+      <span class="text-md ">10 AM</span>
+      <span class="text-md "><i class="fas fa-cloud-sun-rain"></i></span>
+      <span class="text-md ">24°</span>
+    </div>
+    <div class="flex flex-col text-center mx-4 text-blue-100" style="flex: 0 0 auto; ">
+      <span class="text-md ">10 AM</span>
+      <span class="text-md "><i class="fas fa-cloud-sun-rain"></i></span>
+      <span class="text-md ">24°</span>
+    </div>
+    <div class="flex flex-col text-center mx-4 text-blue-100" style="flex: 0 0 auto; ">
+      <span class="text-md ">10 AM</span>
+      <span class="text-md "><i class="fas fa-cloud-sun-rain"></i></span>
+      <span class="text-md ">24°</span>
+    </div>
+    <div class="flex flex-col text-center mx-4 text-blue-100" style="flex: 0 0 auto; ">
+      <span class="text-md ">10 AM</span>
+      <span class="text-md "><i class="fas fa-cloud-sun-rain"></i></span>
+      <span class="text-md ">24°</span>
+    </div>
+    <div class="flex flex-col text-center mx-4 text-blue-100" style="flex: 0 0 auto; ">
+      <span class="text-md ">10 AM</span>
+      <span class="text-md "><i class="fas fa-cloud-sun-rain"></i></span>
+      <span class="text-md ">24°</span>
+    </div>
+  </div>
+  <div class="bg-blue-300">
+    <div class="flex justify-between mx-4 bg-white p-4 mb-2 rounded-xl  text-blue-400" style="z-index: 10; ">
+      <span class="text-md">
+        <i class="fas fa-location-arrow"></i>
+      </span>
+      <span class="text-md "><i class="fas fa-search"></i></span>
+      <span class="text-md "><i class="fas fa-water"></i></span>
+      <span class="text-md "><i class="fas fa-lungs"></i></span>
+      <span class="text-md "><i class="fas fa-th-list"></i></span>
+  </div>
+</div>
+</div>

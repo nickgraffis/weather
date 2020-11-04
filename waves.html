@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="output.css">
+  <script src="https://kit.fontawesome.com/7652f157a9.js" crossorigin="anonymous"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <title>Weather</title>
+  <style>
+.temp::-webkit-scrollbar {
+  display: none; }
+  </style>
+</head>
+<body class="bg-gray-200">
+  <svg  class="wave" style="position: absolute; top: 35%; z-index: -10" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 320"><path fill="#a2d9ff" fill-opacity="1" d="M0,128L26.7,122.7C53.3,117,107,107,160,112C213.3,117,267,139,320,154.7C373.3,171,427,181,480,181.3C533.3,181,587,171,640,144C693.3,117,747,75,800,53.3C853.3,32,907,32,960,48C1013.3,64,1067,96,1120,112C1173.3,128,1227,128,1280,160C1333.3,192,1387,256,1413,288L1440,320L1440,320L1413.3,320C1386.7,320,1333,320,1280,320C1226.7,320,1173,320,1120,320C1066.7,320,1013,320,960,320C906.7,320,853,320,800,320C746.7,320,693,320,640,320C586.7,320,533,320,480,320C426.7,320,373,320,320,320C266.7,320,213,320,160,320C106.7,320,53,320,27,320L0,320Z"></path></svg>
+  <svg  class="wave" style="position: absolute; top: 35%; z-index: -5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 320">  <path fill="blue" fill-opacity="1" d="M0,320L26.7,314.7C53.3,309,107,299,160,250.7C213.3,203,267,117,320,74.7C373.3,32,427,32,480,37.3C533.3,43,587,53,640,74.7C693.3,96,747,128,800,165.3C853.3,203,907,245,960,240C1013.3,235,1067,181,1120,149.3C1173.3,117,1227,107,1280,112C1333.3,117,1387,139,1413,149.3L1440,160L1440,320L1413.3,320C1386.7,320,1333,320,1280,320C1226.7,320,1173,320,1120,320C1066.7,320,1013,320,960,320C906.7,320,853,320,800,320C746.7,320,693,320,640,320C586.7,320,533,320,480,320C426.7,320,373,320,320,320C266.7,320,213,320,160,320C106.7,320,53,320,27,320L0,320Z"></path>
+</svg>
+  <div class="grid h-screen">
+    <div class="flex justify-between m-4">
+      <span class="text-center text-blue-700 text-sm"><i class="fas fa-bars"></i></span>
+      <img class="object-contain h-12 w-12 rounded" src="img/lion.png">
+    </div>
+    <div class="place-self-center flex flex-col pt-4" style="margin-top: -100px;">
+      <span class="text-center text-blue-700 text-xl font-extrabold">San Fransisco</span>
+      <span class="text-center text-white font-bold bg-green-500 text-lg rounded-lg">FAIR</span>
+    </div>
+    <div class="place-self-center">
+      <svg style="height: 70vw;" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+        <path fill="#FF0066" d="M42.7,-71.8C55.3,-66.6,65.7,-55.2,72,-42.3C78.3,-29.3,80.6,-14.6,78.9,-1C77.2,12.7,71.6,25.4,65.1,38.1C58.6,50.7,51.3,63.4,40.3,70.4C29.3,77.4,14.6,78.8,-1,80.5C-16.6,82.2,-33.1,84.1,-45.2,77.8C-57.4,71.4,-65,56.7,-72.8,42.3C-80.6,28,-88.6,14,-89,-0.2C-89.5,-14.5,-82.3,-28.9,-73.9,-42.2C-65.5,-55.6,-55.8,-67.8,-43.3,-73.1C-30.8,-78.4,-15.4,-76.7,-0.2,-76.4C15,-76,30,-76.9,42.7,-71.8Z" transform="translate(100 100)" />
+      </svg>
+    </div>
+    <div class="flex justify-between">
+      <span class="text-blue-200 text-6xl text-extrabold px-4"style="margin-top: -200px; font-size: 75px; -webkit-text-stroke: 2px rgb(59, 108, 171)">3-5 <sup>ft.</sup></span>
+      <span class="text-gray-500 text-3xl px-4" style="margin-top: -50px;"><strong  class="text-blue-700">65°</strong> <span class="text-blue-600"><i class="fas fa-tint"></i></span> 65°</span>
+    </div>
+    <div class="flex temp" style="flex-wrap: nowrap; overflow-x: auto;">
+      <div class="flex flex-col text-center mx-4" style="flex: 0 0 auto; ">
+        <div class="bg-gray-300 rounded-xl h-14 w-24 text-right p-2">
+          <div class="flex justify-between">
+            <span class="text-xs text-gray-600"><i class="fas fa-wind"></i></span>
+            <div class="flex flex-col">
+              <span class="text-xs text-gray-600">WIND</span>
+              <span class="text-xs text-gray-700 font-semibold">NNW 3 mph</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="flex flex-col text-center mx-4" style="flex: 0 0 auto; ">
+        <div class="bg-gray-300 rounded-xl h-14 w-24 text-right p-2">
+          <div class="flex justify-between">
+            <span class="text-xs text-gray-600"><i class="fas fa-tint"></i></span>
+            <div class="flex flex-col">
+              <span class="text-xs text-gray-600">HUMIDITY</span>
+              <span class="text-xs text-gray-700 font-semibold">74%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="flex flex-col text-center mx-4" style="flex: 0 0 auto; ">
+        <div class="bg-gray-300 rounded-xl h-14 w-24 flex flex-col text-right p-2">
+          <span class="text-xs text-gray-600">FEELS LIKE</span>
+          <span class="text-xs text-gray-700 font-semibold">32°</span>
+        </div>
+      </div>
+      <div class="flex flex-col text-center mx-4" style="flex: 0 0 auto; ">
+        <div class="bg-gray-300 rounded-xl h-14 w-24 flex flex-col text-right p-2">
+          <span class="text-xs text-gray-600">RAIN</span>
+          <span class="text-xs text-gray-700 font-semibold">4%</span>
+        </div>
+      </div>
+    </div>
+    <div class="flex justify-between bg-blue-300 pt-8">
+      <p class="text-blue-500 text-md font-extrabold mx-4"><span class="border-b-4 border-blue-700 border-opacity-50">Tuesday</span>, Today</p>
+      <p class="text-blue-500 text-md font-extrabold mx-4"><i class="fas fa-chevron-right"></i></p>
+    </div>
+    <div class="flex temp bg-blue-300 px-4" style="flex-wrap: nowrap; overflow-x: auto;">
+      <div class="flex flex-col text-center text-blue-100" style="flex: 0 0 auto; ">
+        <span class="text-sm">9 AM</span>
+        <span class="text-md"><i class="fas fa-cloud-sun-rain"></i></span>
+        <span class="text-md">24°</span>
+      </div>
+      <div class="flex flex-col text-center mx-4 text-blue-100" style="flex: 0 0 auto; ">
+        <span class="text-md ">9 AM</span>
+        <span class="text-md "><i class="fas fa-cloud-sun-rain"></i></span>
+        <span class="text-md ">24°</span>
+      </div>
+      <div class="flex flex-col text-center mx-4 text-blue-100" style="flex: 0 0 auto; ">
+        <span class="text-md ">9 AM</span>
+        <span class="text-md "><i class="fas fa-cloud-sun-rain"></i></span>
+        <span class="text-md ">24°</span>
+      </div>
+      <div class="flex flex-col text-center mx-4 text-blue-100" text-blue-100 style="flex: 0 0 auto; ">
+        <span class="text-md ">9 AM</span>
+        <span class="text-md "><i class="fas fa-cloud-sun-rain"></i></span>
+        <span class="text-md ">24°</span>
+      </div>
+      <div class="flex flex-col text-center mx-4 text-blue-100" style="flex: 0 0 auto; ">
+        <span class="text-md ">10 AM</span>
+        <span class="text-md "><i class="fas fa-cloud-sun-rain"></i></span>
+        <span class="text-md ">24°</span>
+      </div>
+      <div class="flex flex-col text-center mx-4 text-blue-100" style="flex: 0 0 auto; ">
+        <span class="text-md ">10 AM</span>
+        <span class="text-md "><i class="fas fa-cloud-sun-rain"></i></span>
+        <span class="text-md ">24°</span>
+      </div>
+      <div class="flex flex-col text-center mx-4 text-blue-100" style="flex: 0 0 auto; ">
+        <span class="text-md ">10 AM</span>
+        <span class="text-md "><i class="fas fa-cloud-sun-rain"></i></span>
+        <span class="text-md ">24°</span>
+      </div>
+      <div class="flex flex-col text-center mx-4 text-blue-100" style="flex: 0 0 auto; ">
+        <span class="text-md ">10 AM</span>
+        <span class="text-md "><i class="fas fa-cloud-sun-rain"></i></span>
+        <span class="text-md ">24°</span>
+      </div>
+      <div class="flex flex-col text-center mx-4 text-blue-100" style="flex: 0 0 auto; ">
+        <span class="text-md ">10 AM</span>
+        <span class="text-md "><i class="fas fa-cloud-sun-rain"></i></span>
+        <span class="text-md ">24°</span>
+      </div>
+      <div class="flex flex-col text-center mx-4 text-blue-100" style="flex: 0 0 auto; ">
+        <span class="text-md ">10 AM</span>
+        <span class="text-md "><i class="fas fa-cloud-sun-rain"></i></span>
+        <span class="text-md ">24°</span>
+      </div>
+    </div>
+    <div class="bg-blue-300">
+      <div class="flex justify-between mx-4 bg-white p-4 mb-2 rounded-xl  text-blue-400" style="z-index: 10; ">
+        <span class="text-md">
+          <i class="fas fa-location-arrow"></i>
+        </span>
+        <span class="text-md "><i class="fas fa-search"></i></span>
+        <span class="text-md "><i class="fas fa-th-list"></i></span>
+    </div>
+  </div>
+  </div>
+  <script>
+//   /* Get a file from directory and return it as a string*/
+// function getFile(file) {
+//   var x = new XMLHttpRequest();
+//   x.open("GET", file, false);
+//   x.send();
+//   return x.responseText;
+// }
+// const settings = {
+//   url:
+//   "http://api.openweathermap.org/data/2.5/weather?q=denver&appid=4253ae682bded8fe54667e18d996e279",
+//   method: "GET",
+// };
+//   $.ajax(settings).done(function (response) {
+//   console.log(response);
+//   let file = getFile('day.html?v=4');
+//   document.body.innerHTML = eval('`' + file + '`');
+// });
+  </script>
+</body>
+</html>

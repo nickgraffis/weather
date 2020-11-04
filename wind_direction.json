@@ -1,0 +1,66 @@
+[
+  {
+      "direction": "N",
+      "degree": "348.75"
+  },
+  {
+      "direction": "NNE",
+      "degree": "11.25"
+  },
+  {
+      "direction": "NE",
+      "degree": "33.75"
+  },
+  {
+      "direction": "ENE",
+      "degree": "56.25"
+  },
+  {
+      "direction": "E",
+      "degree": "78.75"
+  },
+  {
+      "direction": "ESE",
+      "degree": "101.25"
+  },
+  {
+      "direction": "SE",
+      "degree": "123.75"
+  },
+  {
+      "direction": "SSE",
+      "degree": "146.25"
+  },
+  {
+      "direction": "S",
+      "degree": "168.75"
+  },
+  {
+      "direction": "SSW",
+      "degree": "191.25"
+  },
+  {
+      "direction": "SW",
+      "degree": "213.75"
+  },
+  {
+      "direction": "WSW",
+      "degree": "236.25"
+  },
+  {
+      "direction": "W",
+      "degree": "258.75"
+  },
+  {
+      "direction": "WNW",
+      "degree": "281.25"
+  },
+  {
+      "direction": "NW",
+      "degree": "303.75"
+  },
+  {
+      "direction": "NNW",
+      "degree": "326.25"
+  }
+]
