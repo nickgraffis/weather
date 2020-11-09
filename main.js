@@ -1,25 +1,203 @@
 (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
 const w = require('./weather.js');
+const store = require('./storage.js');
+
+$(document).ready(function() {
+  $('.extra').on('click', function () {
+    console.log('OK');
+    $(this).addClass('w-10/12 h-48 absolute');
+    $(this).css('left', '9%');
+    $(this).css('top', 'calc(50% - 12em)');
+  });
+});
+
+// window.expand = function (clickedElement) {
+//   if (clickedElement.getAttribute('data-size') === 'expand') {
+//     clickedElement.setAttribute('data-size', 'small');
+//     clickedElement.classList.remove('absolute');
+//     clickedElement.classList.remove('h-48');
+//     clickedElement.classList.remove('w-10/12');
+//   } else {
+//     clickedElement.setAttribute('data-size', 'expand');
+//     clickedElement.classList += ' w-10/12 absolute h-48';
+//   }
+// }
 
 var searchShowing = false;
+var screenSize;
+var currentCity = null;
 
-window.showSearch = function () {
-  if (searchShowing) {
-    $('#nav-bar').removeClass('h-screen');
-    searchShowing= false;
+function capitolize(str) {
+  let words = str.split(' ');
+  let display = words.map((i) => {return i[0].toUpperCase() + i.slice(1)});
+
+  return display.join(' ');
+}
+
+function getFile(file) {
+  var x = new XMLHttpRequest();
+  x.open("GET", file, false);
+  x.send();
+  return x.responseText;
+}
+
+window.search = function (city = null) {
+  let str;
+  if (city) {
+    str = city;
+    showHistory();
   } else {
-      $('#nav-bar').addClass('h-screen');
-      searchShowing = true;
+    str = $('#searchInput').val();
+    console.log(store.queryFavoriteCity());
+    if (!store.queryFavoriteCity()) {
+      store.createCityObject(store.createCityId(), str, true);
+    } else {
+      store.createCityObject(store.createCityId(), str);
+    }
+  }
+
+  currentCity = str;
+  w.getWeather(str, eval('render.' + screenSize + 'Screen'));
+  $('#searchInput').val('');
+  if (searchShowing) {
+    $('#nav-bar').removeClass('h-screen pt-12 bg-opacity-50 static');
+    searchShowing= false;
+    document.getElementsByTagName('weather-history')[0].innerHTML = '';
   }
 }
 
-function load() {
-  w.getWeather('denver');
+window.showSearch = function () {
+  if (searchShowing) {
+    $('#nav-bar').removeClass('h-screen pt-12 bg-opacity-50');
+    searchShowing= false;
+  } else {
+    $('#nav-bar').addClass('h-screen pt-12 bg-opacity-50');
+    searchShowing = true;
+  }
 }
 
-load();
+window.showHistory = function () {
+  if (searchShowing) {
+    $('#nav-bar').removeClass('h-screen pt-12 bg-opacity-50 static');
+    searchShowing= false;
+    document.getElementsByTagName('weather-history')[0].innerHTML = '';
 
-},{"./weather.js":3}],2:[function(require,module,exports){
+  } else {
+    $('#nav-bar').addClass('h-screen pt-12 bg-opacity-50 static');
+    searchShowing = true;
+    document.getElementsByTagName('weather-history')[0].innerHTML = '';
+    let historyItems = store.getCitiesArray();
+    historyItems.map(i => {
+      w.getWeather(i.name, function (city, response) {
+        let weather = w.createWeatherObject(city, response);
+        let file = eval('`' + getFile('./components/history.html') + '`');
+        let div = document.createElement('DIV');
+        div.classList = 'flex justify-between history-item-in';
+        div.innerHTML = file;
+        document.getElementsByTagName('weather-history')[0].append(div);
+      })
+    })
+  }
+}
+
+window.changeFavorite = function (id, event) {
+  let favorite = document.querySelector('.favorite');
+  favorite.classList.remove('favorite');
+  favorite.innerHTML = '<svg height="20" width="20" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path stroke="#a0aec0" fill="#e2e8f0" d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/></svg>';
+  let star = event.currentTarget;
+  console.log(event.currentTarget);
+  star.classList.add('favorite');
+  star.innerHTML = '<svg height="20" width="20" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path stroke="#a0aec0" fill="#3182ce" d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/></svg>';
+  store.updateFavoriteCity(id);
+}
+
+window.deleteCity = function (id, event) {
+  let target = event.currentTarget;
+  let parent = target.parentElement;
+  let grandparent = parent.parentElement;
+  grandparent.remove();
+}
+
+var render = {
+  smallScreen: function (city, response) {
+    var weather = w.createWeatherObject(city, response);
+    console.log(weather);
+    if (weather.tod === 'night') {
+      document.body.setAttribute('data-theme', 'dark');
+    } else {
+      document.body.setAttribute('data-theme', '');
+    }
+    document.getElementsByTagName('weather-title')[0].innerHTML = eval('`' + getFile('./components/title.html') + '`');
+    document.getElementsByTagName('weather-extras')[0].innerHTML = eval('`' + getFile('./components/extras.html') + '`');
+    document.getElementsByTagName('weather-hourly')[0].innerHTML = eval('`' + getFile('./components/hourly.html') + '`');
+    document.getElementsByTagName('weather-daily')[0].innerHTML = eval('`' + getFile('./components/daily.html') + '`');
+    document.getElementsByTagName('weather-indepth')[0].innerHTML = eval('`' + getFile('./components/indepth.html') + '`');
+  },
+  bigScreen: function (city, response) {
+    var weather = w.createWeatherObject(city, response);
+    console.log(weather);
+    if (weather.tod === 'night') {
+      document.body.setAttribute('data-theme', 'dark');
+    }
+    document.getElementsByTagName('weather-title')[0].innerHTML = eval('`' + getFile('./components/big/title.html') + '`');
+  }
+}
+
+var app = document.querySelector('#application');
+
+setInterval(function(){
+  if (window.innerWidth <= 414) {
+    if (app.getAttribute('data-size') != 'small') {
+      app.setAttribute('data-size', 'small');
+      app.innerHTML = eval('`' + getFile('./templates/small.html') + '`');
+
+      let city;
+      if (currentCity != null) {
+        city = currentCity;
+      } else {
+        console.log(store.getCitiesArray());
+        if (store.getCitiesArray().length > 0) {
+          city = store.queryFavoriteCity().name;
+        } else {
+          city = 'irvine';
+        }
+      }
+
+      currentCity = city;
+      w.getWeather(city, render.smallScreen);
+
+      screenSize = 'small';
+    } else {
+      console.log('no change');
+    }
+  } else {
+    if (app.getAttribute('data-size') != 'large') {
+      app.setAttribute('data-size', 'large');
+      app.innerHTML = eval('`' + getFile('./templates/big.html') + '`');
+
+      let city;
+      if (currentCity != null) {
+        city = currentCity;
+      } else {
+        console.log(store.getCitiesArray());
+        if (store.getCitiesArray().length > 0) {
+          city = store.queryFavoriteCity().name;
+        } else {
+          city = 'irvine';
+        }
+      }
+
+      currentCity = city;
+      w.getWeather(city, render.bigScreen);
+
+      screenSize = 'big';
+    } else {
+      console.log('no change');
+    }
+  }
+}, 1000);
+
+},{"./storage.js":3,"./weather.js":4}],2:[function(require,module,exports){
 //! moment.js
 //! version : 2.29.1
 //! authors : Tim Wood, Iskren Chernev, Moment.js contributors
@@ -5692,26 +5870,178 @@ load();
 })));
 
 },{}],3:[function(require,module,exports){
+function createCityObject(id, name, favorite = false) {
+  let object = {
+    id: id,
+    name: name,
+    favorite: favorite,
+  };
+
+  return createCity(object);
+}
+
+function createCity(object) {
+  let cities = getCitiesArray();
+  if (queryCityByName(object.name)) {
+    return 'City already in history';
+  } else {
+    cities.push(object);
+    pushCityToLocalStorage(cities);
+    return object;
+  }
+}
+
+function pushCityToLocalStorage(array) {
+  localStorage.setItem('cities', JSON.stringify(array));
+  return true;
+}
+
+function getCitiesArray() {
+  if (localStorage.getItem('cities')) {
+    try {
+      let cities = JSON.parse(localStorage.getItem('cities'));
+      if (cities.length > 0) {
+        return cities;
+      } else {
+        return [cities];
+      }
+    } catch {
+      let cities = [localStorage.getItem('cities')];
+      return cities;
+    }
+  } else {
+    return [];
+  }
+}
+
+function createCityId() {
+  let ids = getCitiesArray().map(i => i.id);
+  let i = 0;
+  while(ids.includes(getCitiesArray().length + i)) {
+    i++;
+  }
+
+  return getCitiesArray().length + i;
+}
+
+function queryCity(id) {
+  let cities = getCitiesArray();
+
+  for (let i = 0; i < cities.length; i++) {
+    if (cities[i].id === id) {
+      return cities[i];
+    }
+  }
+
+  return false;
+}
+
+function queryCityByName(name) {
+  let cities = getCitiesArray();
+
+  for (let i = 0; i < cities.length; i++) {
+    if (cities[i].name === name) {
+      return cities[i];
+    }
+  }
+
+  return false;
+}
+
+function queryFavoriteCity() {
+  let cities = getCitiesArray();
+
+  for (let i = 0; i < cities.length; i++) {
+    if (cities[i].favorite) {
+      return cities[i];
+    }
+  }
+
+  return false;
+}
+
+function updateFavoriteCity(id) {
+  let cities = getCitiesArray();
+
+  cities.map(c => {
+    if (c.id == id) c.favorite = true;
+    if (c.id != id && c.favorite == true) c.favorite = false;
+  });
+
+  pushCityToLocalStorage(cities);
+
+  return queryCity(id);
+}
+
+function indexOfObject(array, attribute, value) {
+  for (let i = 0; i < array.length; i += 1) {
+    if (array[i][attribute] == value) {
+      return i;
+    }
+  }
+
+  return -1;
+}
+
+function deleteCity(id) {
+  let isFav = queryFavoriteCity()
+  let cities = getCitiesArray();
+  let index = indexOfObject(cities, 'id', id);
+  cities.splice(index, 1);
+
+  pushCityToLocalStorage(cities);
+  if (isFav.id == id) {
+    let newFav = getCitiesArray()[0].id;
+    updateFavoriteCity(newFav);
+  }
+
+  return false;
+}
+
+module.exports = {
+  createCityObject: createCityObject,
+  getCitiesArray: getCitiesArray,
+  createCityId: createCityId,
+  queryCity: queryCity,
+  queryCityByName: queryCityByName,
+  deleteCity: deleteCity,
+  queryFavoriteCity: queryFavoriteCity,
+  updateFavoriteCity: updateFavoriteCity
+}
+
+},{}],4:[function(require,module,exports){
 const moment = require('moment');
 // var cityCodes = require('./city.list.json');
 var windChart = require('./wind_direction.json');
 
-function capitolize(str) {
-  let words = str.split(' ');
-  let display = words.map((i) => {return i[0].toUpperCase() + i.slice(1)});
+var Moon = {
+  phases: ['new-moon', 'waxing-crescent-moon', 'quarter-moon', 'waxing-gibbous-moon', 'full-moon', 'waning-gibbous-moon', 'last-quarter-moon', 'waning-crescent-moon'],
+  phase: function (year, month, day) {
+    let c = e = jd = b = 0;
 
-  return display.join(' ');
-}
+    if (month < 3) {
+      year--;
+      month += 12;
+    }
+
+    ++month;
+    c = 365.25 * year;
+    e = 30.6 * month;
+    jd = c + e + day - 694039.09; // jd is total days elapsed
+    jd /= 29.5305882; // divide by the moon cycle
+    b = parseInt(jd); // int(jd) -> b, take integer part of jd
+    jd -= b; // subtract integer part to leave fractional part of original jd
+    b = Math.round(jd * 8); // scale fraction from 0-8 and round
+
+    if (b >= 8) b = 0; // 0 and 8 are the same so turn 8 into 0
+    return {phase: b, name: Moon.phases[b]};
+  }
+};
+
+// Moon.phase('2018', '01', '19');
 
 function toF (temp) {
   return Math.floor((temp - 273.15) * 9/5 + 32);
-}
-
-function getFile(file) {
-  var x = new XMLHttpRequest();
-  x.open("GET", file, false);
-  x.send();
-  return x.responseText;
 }
 
 function windDirection(deg) {
@@ -5763,7 +6093,8 @@ function createHourlyArray(weather) {
       hourlyArray.push({
         time: moment(array[i].dt * 1000).format('h a'),
         temp: toF(array[i].temp),
-        icon: iconify(array[i], tod)
+        icon: iconify(array[i], tod),
+        pop: array[i].pop
       });
       i++;
       continue;
@@ -5776,7 +6107,8 @@ function createHourlyArray(weather) {
       hourlyArray.push({
         time: moment(array[i].dt * 1000).format('h a'),
         temp: toF(array[i].temp),
-        icon: iconify(array[i], tod)
+        icon: iconify(array[i], tod),
+        pop: array[i].pop
       });
       i++;
       continue;
@@ -5784,7 +6116,8 @@ function createHourlyArray(weather) {
       hourlyArray.push({
         time: moment(array[i].dt * 1000).format('h a'),
         temp: toF(array[i].temp),
-        icon: iconify(array[i], tod)
+        icon: iconify(array[i], tod),
+        pop: array[i].pop
       });
       i++;
       continue;
@@ -5827,7 +6160,7 @@ function createExtras(weather) {
     },
     {
       title: 'rain',
-      string: weather.daily[0].pop + '%',
+      string: weather.daily[0].pop * 100 + '%',
       icon: 'umbrella'
     },
     {
@@ -5965,6 +6298,7 @@ function createWeatherObject(city, weather) {
   let tod = (weather.current.sunset * 1000) > Date.now() && (weather.current.sunrise * 1000) < Date.now() ? 'day' : 'night';
   var object = {
     date: weather.current.dt,
+    tod: weather.current.sunset > weather.current.dt && weather.current.sunrise < weather.current.dt ? 'day' : 'night',
     city_name: city,
     current_temp: toF(weather.current.temp),
     high: toF(weather.daily[0].temp.max),
@@ -5974,7 +6308,8 @@ function createWeatherObject(city, weather) {
     icon: iconify(weather.current, tod),
     hourly: createHourlyArray(weather),
     daily: createDailyArray(city, weather.daily),
-    extras: createExtras(weather)
+    extras: createExtras(weather),
+    pop: weather.current.rain ? weather.daily[0].pop * 100 + '%' : null
   };
 
   return object;
@@ -5997,7 +6332,7 @@ function citySearch (search) {
     });
 }
 
-function getWeather (city) {
+function getWeather (city, callback) {
   var settings = {
     url: 'http://api.openweathermap.org/data/2.5/weather?q=' + city + '&appid=4253ae682bded8fe54667e18d996e279',
     method: 'GET',
@@ -6008,24 +6343,19 @@ function getWeather (city) {
       method: 'GET',
     }
     $.ajax(geo).done(function (geoResponse) {
-      var weather = createWeatherObject(response.name, geoResponse);
-      console.log(weather);
-      document.getElementsByTagName('weather-title')[0].innerHTML = eval('`' + getFile('./components/title.html') + '`');
-      document.getElementsByTagName('weather-current')[0].innerHTML = eval('`' + getFile('./components/current.html') + '`');
-      document.getElementsByTagName('weather-extras')[0].innerHTML = eval('`' + getFile('./components/extras.html') + '`');
-      document.getElementsByTagName('weather-hourly')[0].innerHTML = eval('`' + getFile('./components/hourly.html') + '`');
-      document.getElementsByTagName('weather-daily')[0].innerHTML = eval('`' + getFile('./components/daily.html') + '`');
-      document.getElementsByTagName('weather-indepth')[0].innerHTML = eval('`' + getFile('./components/indepth.html') + '`');
-  });
+      console.log(geoResponse);
+      callback(response.name, geoResponse)
+    });
   });
 }
 
 module.exports = {
   getWeather: getWeather,
-  citySearch: citySearch
+  citySearch: citySearch,
+  createWeatherObject: createWeatherObject
 }
 
-},{"./wind_direction.json":4,"moment":2}],4:[function(require,module,exports){
+},{"./wind_direction.json":5,"moment":2}],5:[function(require,module,exports){
 module.exports=[
   {
       "direction": "N",

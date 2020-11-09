@@ -2,22 +2,34 @@ const moment = require('moment');
 // var cityCodes = require('./city.list.json');
 var windChart = require('./wind_direction.json');
 
-function capitolize(str) {
-  let words = str.split(' ');
-  let display = words.map((i) => {return i[0].toUpperCase() + i.slice(1)});
+var Moon = {
+  phases: ['new-moon', 'waxing-crescent-moon', 'quarter-moon', 'waxing-gibbous-moon', 'full-moon', 'waning-gibbous-moon', 'last-quarter-moon', 'waning-crescent-moon'],
+  phase: function (year, month, day) {
+    let c = e = jd = b = 0;
 
-  return display.join(' ');
-}
+    if (month < 3) {
+      year--;
+      month += 12;
+    }
+
+    ++month;
+    c = 365.25 * year;
+    e = 30.6 * month;
+    jd = c + e + day - 694039.09; // jd is total days elapsed
+    jd /= 29.5305882; // divide by the moon cycle
+    b = parseInt(jd); // int(jd) -> b, take integer part of jd
+    jd -= b; // subtract integer part to leave fractional part of original jd
+    b = Math.round(jd * 8); // scale fraction from 0-8 and round
+
+    if (b >= 8) b = 0; // 0 and 8 are the same so turn 8 into 0
+    return {phase: b, name: Moon.phases[b]};
+  }
+};
+
+// Moon.phase('2018', '01', '19');
 
 function toF (temp) {
   return Math.floor((temp - 273.15) * 9/5 + 32);
-}
-
-function getFile(file) {
-  var x = new XMLHttpRequest();
-  x.open("GET", file, false);
-  x.send();
-  return x.responseText;
 }
 
 function windDirection(deg) {
@@ -69,7 +81,8 @@ function createHourlyArray(weather) {
       hourlyArray.push({
         time: moment(array[i].dt * 1000).format('h a'),
         temp: toF(array[i].temp),
-        icon: iconify(array[i], tod)
+        icon: iconify(array[i], tod),
+        pop: array[i].pop
       });
       i++;
       continue;
@@ -82,7 +95,8 @@ function createHourlyArray(weather) {
       hourlyArray.push({
         time: moment(array[i].dt * 1000).format('h a'),
         temp: toF(array[i].temp),
-        icon: iconify(array[i], tod)
+        icon: iconify(array[i], tod),
+        pop: array[i].pop
       });
       i++;
       continue;
@@ -90,7 +104,8 @@ function createHourlyArray(weather) {
       hourlyArray.push({
         time: moment(array[i].dt * 1000).format('h a'),
         temp: toF(array[i].temp),
-        icon: iconify(array[i], tod)
+        icon: iconify(array[i], tod),
+        pop: array[i].pop
       });
       i++;
       continue;
@@ -133,7 +148,7 @@ function createExtras(weather) {
     },
     {
       title: 'rain',
-      string: weather.daily[0].pop + '%',
+      string: weather.daily[0].pop * 100 + '%',
       icon: 'umbrella'
     },
     {
@@ -271,6 +286,7 @@ function createWeatherObject(city, weather) {
   let tod = (weather.current.sunset * 1000) > Date.now() && (weather.current.sunrise * 1000) < Date.now() ? 'day' : 'night';
   var object = {
     date: weather.current.dt,
+    tod: weather.current.sunset > weather.current.dt && weather.current.sunrise < weather.current.dt ? 'day' : 'night',
     city_name: city,
     current_temp: toF(weather.current.temp),
     high: toF(weather.daily[0].temp.max),
@@ -280,7 +296,8 @@ function createWeatherObject(city, weather) {
     icon: iconify(weather.current, tod),
     hourly: createHourlyArray(weather),
     daily: createDailyArray(city, weather.daily),
-    extras: createExtras(weather)
+    extras: createExtras(weather),
+    pop: weather.current.rain ? weather.daily[0].pop * 100 + '%' : null
   };
 
   return object;
@@ -303,7 +320,7 @@ function citySearch (search) {
     });
 }
 
-function getWeather (city) {
+function getWeather (city, callback) {
   var settings = {
     url: 'http://api.openweathermap.org/data/2.5/weather?q=' + city + '&appid=4253ae682bded8fe54667e18d996e279',
     method: 'GET',
@@ -314,19 +331,14 @@ function getWeather (city) {
       method: 'GET',
     }
     $.ajax(geo).done(function (geoResponse) {
-      var weather = createWeatherObject(response.name, geoResponse);
-      console.log(weather);
-      document.getElementsByTagName('weather-title')[0].innerHTML = eval('`' + getFile('./components/title.html') + '`');
-      document.getElementsByTagName('weather-current')[0].innerHTML = eval('`' + getFile('./components/current.html') + '`');
-      document.getElementsByTagName('weather-extras')[0].innerHTML = eval('`' + getFile('./components/extras.html') + '`');
-      document.getElementsByTagName('weather-hourly')[0].innerHTML = eval('`' + getFile('./components/hourly.html') + '`');
-      document.getElementsByTagName('weather-daily')[0].innerHTML = eval('`' + getFile('./components/daily.html') + '`');
-      document.getElementsByTagName('weather-indepth')[0].innerHTML = eval('`' + getFile('./components/indepth.html') + '`');
-  });
+      console.log(geoResponse);
+      callback(response.name, geoResponse)
+    });
   });
 }
 
 module.exports = {
   getWeather: getWeather,
-  citySearch: citySearch
+  citySearch: citySearch,
+  createWeatherObject: createWeatherObject
 }

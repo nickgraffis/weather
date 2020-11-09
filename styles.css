@@ -3,3 +3,116 @@
 @tailwind components;
 
 @tailwind utilities;
+
+:root {
+  --background-url: url('/img/sunnytime.png');
+  --color-bg: #fed7d7;
+  --color-bg-transparent: rgb(254, 215, 215, 0);
+  --color-500:#4299e1;
+  --color-600: #3182ce;
+  --color-contrast: #3182ce;
+}
+
+[data-theme="dark"] {
+  --background-url: url('/img/nighttime.png');
+  --color-bg: #4c51bf;
+  --color-bg-transparent: rgb(76, 81, 191, 0);
+  --color-500:#edf2f7;
+  --color-600: #cbd5e0;
+  --color-contrast: #3182ce;
+}
+
+#application {
+  background: var(--background-url);
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+weather-extras {
+  background-image: linear-gradient(var(--color-bg-transparent), var(--color-bg));
+}
+
+weather-hourly {
+  background-color: var(--color-bg);
+}
+
+weather-indepth {
+  background-color: var(--color-bg);
+}
+
+weather-daily {
+  background-color: var(--color-bg);
+}
+
+#nav-bar {
+  background-color: var(--color-bg);
+  cursor: pointer;
+}
+
+.color-500 {
+  color: var(--color-500);
+}
+
+.color-600 {
+  color: var(--color-600);
+}
+
+.border-600 {
+  border-color: var(--color-600);
+}
+
+.color-contrast {
+  color: var(--color-contrast);
+}
+
+.history {
+  cursor: pointer;
+}
+
+.history-item-in {
+  animation: slide-in-bottom 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both
+}
+
+.history-item-out {
+  animation: slide-in-bottom 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both
+}
+
+.extra {
+  max-height: 15em;
+  transition: all 10s ease;
+}
+
+.fade-in {
+animation: fadeIn ease 1s;
+-webkit-animation: fadeIn ease 1s;
+-moz-animation: fadeIn ease 1s;
+-o-animation: fadeIn ease 1s;
+-ms-animation: fadeIn ease 1s;
+}
+@keyframes fadeIn {
+0% {opacity:0;}
+100% {opacity:1;}
+}
+
+@-moz-keyframes fadeIn {
+0% {opacity:0;}
+100% {opacity:1;}
+}
+
+@-webkit-keyframes fadeIn {
+0% {opacity:0;}
+100% {opacity:1;}
+}
+
+@-o-keyframes fadeIn {
+0% {opacity:0;}
+100% {opacity:1;}
+}
+
+@-ms-keyframes fadeIn {
+0% {opacity:0;}
+100% {opacity:1;}
+}
+
+@keyframes slide-out-bottom{0%{-webkit-transform:translateY(0);transform:translateY(0);opacity:1}100%{-webkit-transform:translateY(1000px);transform:translateY(1000px);opacity:0}}
+@keyframes slide-in-bottom{0%{-webkit-transform:translateY(1000px);transform:translateY(1000px);opacity:0}100%{-webkit-transform:translateY(0);transform:translateY(0);opacity:1}}

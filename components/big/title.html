@@ -1,0 +1,5 @@
+<div class="flex flex-col justify-center">
+  ${weather.description} ${weather.icon ? `<img class="inline-block align-middle h-48 w-48" src="/icons/${weather.icon}.png" />` : ''}
+  <span class="color-500 text-6xl text-extrabold" style="font-size: 100px;">${weather.current_temp}°</span>
+  <p class="color-500 text-lg">It's <strong class="color-600">${weather.description} ${weather.icon ? `<img class="inline-block align-middle h-10 w-10" src="/icons/${weather.icon}.png" />` : ''}</strong></p>
+</div>

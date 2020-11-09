@@ -1,0 +1,20 @@
+<div id="wrapper" class="h-screen overflow-scroll" style="padding-bottom: 60px;">
+  <div class="grid pb-4">
+    <weather-title class="mb-5/12"></weather-title>
+    <weather-extras class="flex temp h-24" style="flex-wrap: nowrap; overflow-x: auto;"></weather-extras>
+    <weather-hourly class="flex temp py-4 -mt-1" style="flex-wrap: nowrap; overflow-x: auto;"></weather-hourly>
+    <weather-indepth class="border-b border-t border-600"></weather-indepth>
+    <weather-daily class="flex flex-col p-4"></weather-daily>
+  </div>
+</div>
+<div id="nav-bar" class="absolute inset-x-0 bottom-0 h-20 overflow-scroll">
+  <div class="grid grid-cols-8 mx-4 bg-white p-4 mb-4 rounded-xl text-blue-600" style="z-index: 10; ">
+    <div onclick="showHistory()" class="col-span-1 h-10 w-10 rounded-full justify-self-start place-self-center flex justify-center items-center hover:bg-blue-100">
+      <span class="text-md"><i class="fas fa-th-list"></i></span>
+    </div>
+    <input class="shadow appearance-none border rounded-full w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none justify-self-stretch col-span-6 focus:shadow-outline" id="searchInput" type="text" placeholder="">
+    <!-- <input id="searchInput" class="form-input block leading-tight focus:outline-none focus:shadow-outline justify-self-stretch col-span-6 border border-gray-400 rounded-full font-semibold text-blue-600" type="text"> -->
+    <span onclick="search()" class="place-self-center text-md justify-self-start mx-4"><i class="fas fa-search"></i></span>
+  </div>
+  <weather-history class="m-2 flex flex-col justify-center w-100"></weather-history>
+</div>
