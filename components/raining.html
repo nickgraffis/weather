@@ -1,0 +1,10 @@
+<span class="textsm color-600 font-semibold mx-4">Next Hour Precipitation</span>
+<div class="w-full h-24 rain-graph mb-4 flex items-end" style="background: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,.8) 3%, rgba(255,255,255,0) 6%), linear-gradient(180deg, rgba(255,255,255,0) 30%, rgba(255,255,255,.8) 33%, rgba(255,255,255,0) 36%), linear-gradient(180deg, rgba(255,255,255,0) 60%, rgba(255,255,255,.8) 63%, rgba(255,255,255,0) 66%), linear-gradient(180deg, rgba(255,255,255,0) 90%, rgba(255,255,255,.8) 93%, rgba(255,255,255,0) 96%)">
+  <div class="mx-4 flex items-end">
+    ${weather.minutely.map(function(min, i) {
+      if (i === 0 || i % 2 === 0) {
+        return `<span class="w-2 rounded-full bg-gradient-to-b from-white to-blue-500" style="margin-right: 2px; margin-left: 2px; height: ${min.precipitation * 20}px"></span>`;
+      }
+    }).join('')}
+  </div>
+</div>

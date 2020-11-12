@@ -101,6 +101,9 @@ window.deleteCity = function (id, event) {
 
 var render = {
   smallScreen: function (response) {
+    if (typeof response === 'string') {
+      alert(response);
+    }
     var weather = response;
     console.log(weather);
     if (weather.current.tod === 'night') {
@@ -119,6 +122,11 @@ var render = {
     document.getElementsByTagName('weather-hourly')[0].innerHTML = eval('`' + getFile('./components/hourly.html') + '`');
     document.getElementsByTagName('weather-daily')[0].innerHTML = eval('`' + getFile('./components/daily.html') + '`');
     document.getElementsByTagName('weather-indepth')[0].innerHTML = eval('`' + getFile('./components/indepth.html') + '`');
+    if (weather.current.rain != null) {
+      document.getElementsByTagName('weather-raining')[0].innerHTML = eval('`' + getFile('./components/raining.html') + '`');
+    } else {
+      document.getElementsByTagName('weather-raining')[0].innerHTML = '';
+    }
   },
   bigScreen: function (response) {
     var weather = response;
@@ -6013,7 +6021,7 @@ function findTimeOfDay(weather, sunRise, sunSet) {
 }
 
 function createWeatherString (weather) {
-  return `Today is ${weather.weather[0].description} with a high of ${weathermath.toF(weather.temp.max)}° and a low of ${weathermath.toF(weather.temp.min)}°. There is a ${weather.pop}% chance of rain.`;
+  return `Today is ${weather.current.weather[0].description} with a high of ${weathermath.toF(weather.daily[0].temp.max)}° and a low of ${weathermath.toF(weather.daily[0].temp.min)}°. There is a ${weather.daily[0].pop}% chance of rain.`;
 }
 
 function createWeatherArray(weather, tod) {
@@ -6094,7 +6102,6 @@ function createCurrentArray (weather, sunRise, sunSet) {
     tod: weather.sunrise ? findTimeOfDay(weather) : findTimeOfDay(weather, sunRise, sunSet),
     temp: weather.temp,
     weather: createWeatherArray(weather.weather, weather.sunrise ? findTimeOfDay(weather) : findTimeOfDay(weather, sunRise, sunSet),),
-    string: createWeatherString(weather)
   }
 }
 
@@ -6102,6 +6109,7 @@ module.exports = {
   createCurrentArray: createCurrentArray,
   createDailyArray: createDailyArray,
   createHourlyArray: createHourlyArray,
+  createWeatherString: createWeatherString,
 }
 
 },{"./weather-icons.js":5,"./weather-math.js":6,"moment":2}],5:[function(require,module,exports){
@@ -6295,10 +6303,14 @@ function humidityChart (value) {
   if (value > 30) {
     return {string: 'high', emoji: '🥵'};
   } else if (value < 30) {
-    return {string: 'dry', emoij: '🌵'};
+    return {string: 'dry', emoji: '🌵'};
   } else {
     return {string: 'normal', emoji: '🤙'}
   }
+}
+
+function mmToIn(value) {
+  return value / 25.4;
 }
 
 module.exports = {
@@ -6307,6 +6319,7 @@ module.exports = {
   Moon: Moon,
   toF: toF,
   pressure: pressure,
+  mmToIn: mmToIn,
   metersToMile: metersToMile,
   humidityChart: humidityChart
 }
@@ -6321,8 +6334,10 @@ function createWeatherObject(city, weather) {
     current: help.createCurrentArray(weather.current),
     hourly: help.createHourlyArray(weather.hourly, weather.current.sunrise, weather.current.sunset),
     daily: help.createDailyArray(weather.daily),
+    minutely: weather.minutely,
     lat: weather.lat,
-    lon: weather.lon
+    lon: weather.lon,
+    string: help.createWeatherString(weather)
   }
 
   return object;
@@ -6335,7 +6350,7 @@ function getWeather(city, callback) {
   };
   $.ajax(settings).done(function(response) {
     var geo = {
-      url: 'https://api.openweathermap.org/data/2.5/onecall?lat=' + response.coord.lat + '&lon=' + response.coord.lon + '&exclude=minutely&appid=4253ae682bded8fe54667e18d996e279',
+      url: 'https://api.openweathermap.org/data/2.5/onecall?lat=' + response.coord.lat + '&lon=' + response.coord.lon + '&appid=4253ae682bded8fe54667e18d996e279',
       method: 'GET',
     }
     $.ajax(geo).done(function(geoResponse) {

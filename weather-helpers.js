@@ -8,7 +8,7 @@ function findTimeOfDay(weather, sunRise, sunSet) {
 }
 
 function createWeatherString (weather) {
-  return `Today is ${weather.weather[0].description} with a high of ${weathermath.toF(weather.temp.max)}° and a low of ${weathermath.toF(weather.temp.min)}°. There is a ${weather.pop}% chance of rain.`;
+  return `Today is ${weather.current.weather[0].description} with a high of ${weathermath.toF(weather.daily[0].temp.max)}° and a low of ${weathermath.toF(weather.daily[0].temp.min)}°. There is a ${weather.daily[0].pop}% chance of rain.`;
 }
 
 function createWeatherArray(weather, tod) {
@@ -89,7 +89,6 @@ function createCurrentArray (weather, sunRise, sunSet) {
     tod: weather.sunrise ? findTimeOfDay(weather) : findTimeOfDay(weather, sunRise, sunSet),
     temp: weather.temp,
     weather: createWeatherArray(weather.weather, weather.sunrise ? findTimeOfDay(weather) : findTimeOfDay(weather, sunRise, sunSet),),
-    string: createWeatherString(weather)
   }
 }
 
@@ -97,4 +96,5 @@ module.exports = {
   createCurrentArray: createCurrentArray,
   createDailyArray: createDailyArray,
   createHourlyArray: createHourlyArray,
+  createWeatherString: createWeatherString,
 }

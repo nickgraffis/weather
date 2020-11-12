@@ -7,8 +7,10 @@ function createWeatherObject(city, weather) {
     current: help.createCurrentArray(weather.current),
     hourly: help.createHourlyArray(weather.hourly, weather.current.sunrise, weather.current.sunset),
     daily: help.createDailyArray(weather.daily),
+    minutely: weather.minutely,
     lat: weather.lat,
-    lon: weather.lon
+    lon: weather.lon,
+    string: help.createWeatherString(weather)
   }
 
   return object;
@@ -21,7 +23,7 @@ function getWeather(city, callback) {
   };
   $.ajax(settings).done(function(response) {
     var geo = {
-      url: 'https://api.openweathermap.org/data/2.5/onecall?lat=' + response.coord.lat + '&lon=' + response.coord.lon + '&exclude=minutely&appid=4253ae682bded8fe54667e18d996e279',
+      url: 'https://api.openweathermap.org/data/2.5/onecall?lat=' + response.coord.lat + '&lon=' + response.coord.lon + '&appid=4253ae682bded8fe54667e18d996e279',
       method: 'GET',
     }
     $.ajax(geo).done(function(geoResponse) {

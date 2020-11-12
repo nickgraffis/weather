@@ -21838,6 +21838,10 @@ weather-daily {
   cursor: pointer;
 }
 
+.border-500 {
+  border-color: var(--color-500);
+}
+
 .color-500 {
   color: var(--color-500);
 }

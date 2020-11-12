@@ -100,6 +100,9 @@ window.deleteCity = function (id, event) {
 
 var render = {
   smallScreen: function (response) {
+    if (typeof response === 'string') {
+      alert(response);
+    }
     var weather = response;
     console.log(weather);
     if (weather.current.tod === 'night') {
@@ -118,6 +121,11 @@ var render = {
     document.getElementsByTagName('weather-hourly')[0].innerHTML = eval('`' + getFile('./components/hourly.html') + '`');
     document.getElementsByTagName('weather-daily')[0].innerHTML = eval('`' + getFile('./components/daily.html') + '`');
     document.getElementsByTagName('weather-indepth')[0].innerHTML = eval('`' + getFile('./components/indepth.html') + '`');
+    if (weather.current.rain != null) {
+      document.getElementsByTagName('weather-raining')[0].innerHTML = eval('`' + getFile('./components/raining.html') + '`');
+    } else {
+      document.getElementsByTagName('weather-raining')[0].innerHTML = '';
+    }
   },
   bigScreen: function (response) {
     var weather = response;

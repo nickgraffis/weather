@@ -80,10 +80,14 @@ function humidityChart (value) {
   if (value > 30) {
     return {string: 'high', emoji: '🥵'};
   } else if (value < 30) {
-    return {string: 'dry', emoij: '🌵'};
+    return {string: 'dry', emoji: '🌵'};
   } else {
     return {string: 'normal', emoji: '🤙'}
   }
+}
+
+function mmToIn(value) {
+  return value / 25.4;
 }
 
 module.exports = {
@@ -92,6 +96,7 @@ module.exports = {
   Moon: Moon,
   toF: toF,
   pressure: pressure,
+  mmToIn: mmToIn,
   metersToMile: metersToMile,
   humidityChart: humidityChart
 }
