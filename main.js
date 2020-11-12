@@ -1,31 +1,12 @@
 (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
-const w = require('./weather.js');
+const w = require('./weather2.js');
 const store = require('./storage.js');
-
-$(document).ready(function() {
-  $('.extra').on('click', function () {
-    console.log('OK');
-    $(this).addClass('w-10/12 h-48 absolute');
-    $(this).css('left', '9%');
-    $(this).css('top', 'calc(50% - 12em)');
-  });
-});
-
-// window.expand = function (clickedElement) {
-//   if (clickedElement.getAttribute('data-size') === 'expand') {
-//     clickedElement.setAttribute('data-size', 'small');
-//     clickedElement.classList.remove('absolute');
-//     clickedElement.classList.remove('h-48');
-//     clickedElement.classList.remove('w-10/12');
-//   } else {
-//     clickedElement.setAttribute('data-size', 'expand');
-//     clickedElement.classList += ' w-10/12 absolute h-48';
-//   }
-// }
+const moment = require('moment');
+const weathermath = require('./weather-math.js');
 
 var searchShowing = false;
 var screenSize;
-var currentCity = null;
+var currentCity = 'San Fransisco';
 
 function capitolize(str) {
   let words = str.split(' ');
@@ -68,28 +49,28 @@ window.search = function (city = null) {
 
 window.showSearch = function () {
   if (searchShowing) {
-    $('#nav-bar').removeClass('h-screen pt-12 bg-opacity-50');
+    $('#nav-bar').removeClass('h-screen pt-12 bg-opacity-20');
     searchShowing= false;
   } else {
-    $('#nav-bar').addClass('h-screen pt-12 bg-opacity-50');
+    $('#nav-bar').addClass('h-screen pt-12 bg-opacity-20');
     searchShowing = true;
   }
 }
 
 window.showHistory = function () {
   if (searchShowing) {
-    $('#nav-bar').removeClass('h-screen pt-12 bg-opacity-50 static');
+    $('#nav-bar').removeClass('h-screen pt-12 bg-opacity-20 static');
     searchShowing= false;
     document.getElementsByTagName('weather-history')[0].innerHTML = '';
 
   } else {
-    $('#nav-bar').addClass('h-screen pt-12 bg-opacity-50 static');
+    $('#nav-bar').addClass('h-screen pt-12 bg-opacity-20 static');
     searchShowing = true;
     document.getElementsByTagName('weather-history')[0].innerHTML = '';
     let historyItems = store.getCitiesArray();
     historyItems.map(i => {
-      w.getWeather(i.name, function (city, response) {
-        let weather = w.createWeatherObject(city, response);
+      w.getWeather(i.name, function (response) {
+        let weather = response;
         let file = eval('`' + getFile('./components/history.html') + '`');
         let div = document.createElement('DIV');
         div.classList = 'flex justify-between history-item-in';
@@ -103,11 +84,11 @@ window.showHistory = function () {
 window.changeFavorite = function (id, event) {
   let favorite = document.querySelector('.favorite');
   favorite.classList.remove('favorite');
-  favorite.innerHTML = '<svg height="20" width="20" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path stroke="#a0aec0" fill="#e2e8f0" d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/></svg>';
+  favorite.innerHTML = '<span style="color:#e2e8f0;"><i class="fas fa-star"></i></span>';
   let star = event.currentTarget;
   console.log(event.currentTarget);
   star.classList.add('favorite');
-  star.innerHTML = '<svg height="20" width="20" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path stroke="#a0aec0" fill="#3182ce" d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/></svg>';
+  star.innerHTML = '<span style="color: #3182ce;"><i class="fas fa-star"></i></span>';
   store.updateFavoriteCity(id);
 }
 
@@ -119,13 +100,19 @@ window.deleteCity = function (id, event) {
 }
 
 var render = {
-  smallScreen: function (city, response) {
-    var weather = w.createWeatherObject(city, response);
+  smallScreen: function (response) {
+    var weather = response;
     console.log(weather);
-    if (weather.tod === 'night') {
+    if (weather.current.tod === 'night') {
       document.body.setAttribute('data-theme', 'dark');
+      if (document.querySelector('.sun')) {
+        document.querySelector('.sun').classList = 'moon';
+      }
     } else {
       document.body.setAttribute('data-theme', '');
+      if (document.querySelector('.moon')) {
+        document.querySelector('.moon').classList = 'sun';
+      }
     }
     document.getElementsByTagName('weather-title')[0].innerHTML = eval('`' + getFile('./components/title.html') + '`');
     document.getElementsByTagName('weather-extras')[0].innerHTML = eval('`' + getFile('./components/extras.html') + '`');
@@ -133,13 +120,16 @@ var render = {
     document.getElementsByTagName('weather-daily')[0].innerHTML = eval('`' + getFile('./components/daily.html') + '`');
     document.getElementsByTagName('weather-indepth')[0].innerHTML = eval('`' + getFile('./components/indepth.html') + '`');
   },
-  bigScreen: function (city, response) {
-    var weather = w.createWeatherObject(city, response);
+  bigScreen: function (response) {
+    var weather = response;
     console.log(weather);
     if (weather.tod === 'night') {
       document.body.setAttribute('data-theme', 'dark');
     }
     document.getElementsByTagName('weather-title')[0].innerHTML = eval('`' + getFile('./components/big/title.html') + '`');
+    document.getElementsByTagName('weather-weekly')[0].innerHTML = eval('`' + getFile('./components/big/weekly.html') + '`');
+    document.getElementsByTagName('weather-extras')[0].innerHTML = eval('`' + getFile('./components/big/extras.html') + '`');
+
   }
 }
 
@@ -148,14 +138,10 @@ var app = document.querySelector('#application');
 setInterval(function(){
   if (window.innerWidth <= 414) {
     if (app.getAttribute('data-size') != 'small') {
-      app.setAttribute('data-size', 'small');
-      app.innerHTML = eval('`' + getFile('./templates/small.html') + '`');
-
       let city;
       if (currentCity != null) {
         city = currentCity;
       } else {
-        console.log(store.getCitiesArray());
         if (store.getCitiesArray().length > 0) {
           city = store.queryFavoriteCity().name;
         } else {
@@ -163,8 +149,15 @@ setInterval(function(){
         }
       }
 
+      if (currentCity !== city) {
+        currentCity = city;
+        w.getWeather(city, render.smallScreen);
+      }
       currentCity = city;
       w.getWeather(city, render.smallScreen);
+
+      app.setAttribute('data-size', 'small');
+      app.innerHTML = eval('`' + getFile('./templates/small.html') + '`');
 
       screenSize = 'small';
     } else {
@@ -197,7 +190,7 @@ setInterval(function(){
   }
 }, 1000);
 
-},{"./storage.js":3,"./weather.js":4}],2:[function(require,module,exports){
+},{"./storage.js":3,"./weather-math.js":6,"./weather2.js":7,"moment":2}],2:[function(require,module,exports){
 //! moment.js
 //! version : 2.29.1
 //! authors : Tim Wood, Iskren Chernev, Moment.js contributors
@@ -6010,188 +6003,109 @@ module.exports = {
 }
 
 },{}],4:[function(require,module,exports){
+const icon = require('./weather-icons.js');
+const weathermath = require('./weather-math.js');
 const moment = require('moment');
-// var cityCodes = require('./city.list.json');
-var windChart = require('./wind_direction.json');
 
-var Moon = {
-  phases: ['new-moon', 'waxing-crescent-moon', 'quarter-moon', 'waxing-gibbous-moon', 'full-moon', 'waning-gibbous-moon', 'last-quarter-moon', 'waning-crescent-moon'],
-  phase: function (year, month, day) {
-    let c = e = jd = b = 0;
-
-    if (month < 3) {
-      year--;
-      month += 12;
-    }
-
-    ++month;
-    c = 365.25 * year;
-    e = 30.6 * month;
-    jd = c + e + day - 694039.09; // jd is total days elapsed
-    jd /= 29.5305882; // divide by the moon cycle
-    b = parseInt(jd); // int(jd) -> b, take integer part of jd
-    jd -= b; // subtract integer part to leave fractional part of original jd
-    b = Math.round(jd * 8); // scale fraction from 0-8 and round
-
-    if (b >= 8) b = 0; // 0 and 8 are the same so turn 8 into 0
-    return {phase: b, name: Moon.phases[b]};
-  }
-};
-
-// Moon.phase('2018', '01', '19');
-
-function toF (temp) {
-  return Math.floor((temp - 273.15) * 9/5 + 32);
-}
-
-function windDirection(deg) {
-  let degrees = windChart.map(function (el) { return el.degree; });
-
-  degrees.sort((a, b) => {
-    return Math.abs(deg - a) - Math.abs(deg - b);
-  });
-
-  for (var i=0; i < windChart.length; i++) {
-    if (windChart[i].degree === degrees[0]) {
-        return windChart[i];
-    }
-  }
-}
-
-function uviChart(uvi) {
-  let intensity = '';
-
-  if (uvi < 2) {
-    intensity = 'low';
-  } else if (uvi < 5 && uvi > 2) {
-    intensity = 'moderate';
-  } else if (uvi < 7 && uvi > 5) {
-    intensity = 'high';
-  } else if (uvi < 10 && uvi > 7) {
-    intensity = 'very high';
-  } else {
-    intensity = 'extreme';
-  }
-
-  return intensity;
-}
-
-function createHourlyArray(weather) {
-  let array = weather.hourly;
-  let sunset = parseInt(moment(weather.current.sunset * 1000).format('H'));
-  let sunrise = parseInt(moment(weather.current.sunrise * 1000).format('H'));
-  let i = 0;
-  let hourlyArray = [];
-  while (i < array.length) {
-    let tod = (sunset + 1) > parseInt(moment(array[i].dt * 1000).format('H')) && (sunrise - 2) < parseInt(moment(array[i].dt * 1000).format('H')) ? 'day' : 'night';
-    if (parseInt(moment(array[i].dt * 1000).format('H')) === sunset + 1) {
-      hourlyArray.push({
-        time: moment(weather.current.sunset * 1000).format('h:mm a'),
-        temp: toF(array[i].temp),
-        icon: 'sunset'
-      });
-      hourlyArray.push({
-        time: moment(array[i].dt * 1000).format('h a'),
-        temp: toF(array[i].temp),
-        icon: iconify(array[i], tod),
-        pop: array[i].pop
-      });
-      i++;
-      continue;
-    } else if (parseInt(moment(array[i].dt * 1000).format('H')) === sunrise - 1) {
-      hourlyArray.push({
-        time: moment(weather.current.sunset * 1000).format('h:mm a'),
-        temp: toF(array[i].temp),
-        icon: 'sunrise'
-      });
-      hourlyArray.push({
-        time: moment(array[i].dt * 1000).format('h a'),
-        temp: toF(array[i].temp),
-        icon: iconify(array[i], tod),
-        pop: array[i].pop
-      });
-      i++;
-      continue;
-    } else {
-      hourlyArray.push({
-        time: moment(array[i].dt * 1000).format('h a'),
-        temp: toF(array[i].temp),
-        icon: iconify(array[i], tod),
-        pop: array[i].pop
-      });
-      i++;
-      continue;
-    }
-  }
-  return hourlyArray;
-}
-
-function createExtras(weather) {
-  var extras = [
-    {
-      title: 'wind',
-      string: windDirection(weather.current.wind_deg).direction + ' ' + weather.current.wind_speed + ' mph',
-      icon: 'windstock'
-    },
-    {
-      title: 'uv index',
-      string: weather.current.uvi + ' ' + uviChart(weather.current.uvi),
-      icon: 'sun'
-    },
-    {
-      title: 'humidity',
-      string: weather.current.humidity + '%',
-      icon: 'rain-gauge'
-    },
-    {
-      title: 'visibility',
-      string: ((weather.current.visibility * 3.281) / 5280).toFixed(2) + ' mi',
-      icon: 'cloud-2'
-    },
-    {
-      title: 'feels like',
-      string: toF(weather.current.feels_like) + '°',
-      icon: 'thermometer'
-    },
-    {
-      title: 'pressure',
-      string: Math.floor(weather.current.pressure / 34) + ' inHg',
-      icon: 'pressure'
-    },
-    {
-      title: 'rain',
-      string: weather.daily[0].pop * 100 + '%',
-      icon: 'umbrella'
-    },
-    {
-      title: 'dew point',
-      string: toF(weather.current.dew_point) + '°',
-      icon: 'dew-point'
-    }
-  ]
-
-  return extras;
-}
-
-function createDailyArray (city, array) {
-  return array.map(function (item) {
-    let tod = item.sunset > item.dt && item.sunrise < item.dt ? 'day' : 'night';
-    return {
-      date: moment(item.dt * 1000).format('dddd'),
-      high: toF(item.temp.max),
-      low: toF(item.temp.min),
-      description: item.weather.main,
-      icon: iconify(item, tod),
-      pop: item.pop
-    }
-  });
+function findTimeOfDay(weather, sunRise, sunSet) {
+  if (sunRise) { return sunSet > weather.dt && sunRise < weather.dt ? 'day' : 'night'; }
+  else { return weather.sunset > weather.dt && weather.sunrise < weather.dt ? 'day' : 'night'; }
 }
 
 function createWeatherString (weather) {
-  return `Today is ${weather.weather[0].description} with a high of ${toF(weather.temp.max)}° and a low of ${toF(weather.temp.min)}°. There is a ${weather.pop}% chance of rain.`;
+  return `Today is ${weather.weather[0].description} with a high of ${weathermath.toF(weather.temp.max)}° and a low of ${weathermath.toF(weather.temp.min)}°. There is a ${weather.pop}% chance of rain.`;
 }
 
-function thunderstormIcon(description) {
+function createWeatherArray(weather, tod) {
+  return weather.map(function(w) {
+    return {
+      main: w.main,
+      description: w.description,
+      icon: icon.find(w, tod)
+    }
+  });
+}
+
+function createHourlyArray (array, sunRise, sunSet) {
+  let hourlyArray = [];
+
+  for (a of array) {
+    if (moment(a.dt * 1000).format('kk') === moment(sunSet * 1000).format('kk')) {
+      hourlyArray.push(createCurrentArray(a, sunRise, sunSet));
+      hourlyArray.push({
+        temp: a.temp,
+        dt: sunSet,
+        pop: a.pop,
+        weather: [{icon: 'sunset'}]
+      });
+    } else if (moment(a.dt * 1000).format('kk') === moment(sunRise * 1000).format('kk')) {
+      hourlyArray.push(createCurrentArray(a, sunRise, sunSet));
+      hourlyArray.push({
+        temp: a.temp,
+        dt: sunRise,
+        pop: a.pop,
+        weather: [{icon: 'sunrise'}]
+      });
+    } else {
+      hourlyArray.push(createCurrentArray(a, sunRise, sunSet));
+    }
+  }
+
+  return hourlyArray;
+}
+
+function createDailyArray (array) {
+  return array.map(function(item) {
+    return createCurrentArray(item);
+  });
+}
+
+function createExtras(weather) {
+  return weather.map(function(w) {
+    return {
+      title: w.key,
+      value: w.value
+    }
+  })
+}
+
+function createCurrentArray (weather, sunRise, sunSet) {
+  return {
+    dt: weather.dt,
+    extras: createExtras([
+      {key: 'humidity', value: weather.humidity ? weather.humidity : null},
+      {key: 'pressure', value: weather.pressure ? weather.pressure : null},
+      {key: 'uvi', value: weather.uvi ? weather.uvi : null},
+      {key: 'visibility', value: weather.visibility ? weather.visibility : null},
+      {key: 'cloudiness', value: weather.clouds},
+      {key: 'dew-point', value: weather.dew_point},
+      {key: 'feels-like', value: weather.feels_like},
+      {key: 'wind', value: {
+          wind_deg: weather.wind_deg,
+          wind_speed: weather.wind_speed,
+        },
+      }
+    ]),
+    pop: weather.pop ? weather.pop : null,
+    rain: weather.rain ? weather.rain : null,
+    snow: weather.snow ? weather.snow : null,
+    sunrise: weather.sunrise ? weather.sunrise : sunRise,
+    sunset: weather.sunset ? weather.sunset : sunSet,
+    tod: weather.sunrise ? findTimeOfDay(weather) : findTimeOfDay(weather, sunRise, sunSet),
+    temp: weather.temp,
+    weather: createWeatherArray(weather.weather, weather.sunrise ? findTimeOfDay(weather) : findTimeOfDay(weather, sunRise, sunSet),),
+    string: createWeatherString(weather)
+  }
+}
+
+module.exports = {
+  createCurrentArray: createCurrentArray,
+  createDailyArray: createDailyArray,
+  createHourlyArray: createHourlyArray,
+}
+
+},{"./weather-icons.js":5,"./weather-math.js":6,"moment":2}],5:[function(require,module,exports){
+function thunderstorm(description) {
   if (description.includes('rain') || description.includes('drizzle')) {
     return 'thunderstorm-rain';
   } else if (description.includes('heavy') || description.includes('ragged')) {
@@ -6254,9 +6168,9 @@ function clouds (tod, description) {
   }
 }
 
-function iconify (weather, tod) {
-  let main = weather.weather[0].main.toLowerCase();
-  let description = weather.weather[0].description;
+function find (weather, tod) {
+  let main = weather.main.toLowerCase();
+  let description = weather.description;
   if (main === 'thunderstorm') {
     return thunderstorm(description);
   } else if (main === 'drizzle' || main === 'rain') {
@@ -6294,68 +6208,156 @@ function iconify (weather, tod) {
   }
 }
 
+module.exports = {
+  find: find
+}
+
+},{}],6:[function(require,module,exports){
+var windChart = require('./wind_direction.json');
+
+var Moon = {
+  phases: ['new-moon', 'waxing-crescent-moon', 'quarter-moon', 'waxing-gibbous-moon', 'full-moon', 'waning-gibbous-moon', 'last-quarter-moon', 'waning-crescent-moon'],
+  phase: function (year, month, day) {
+    let c = e = jd = b = 0;
+
+    if (month < 3) {
+      year--;
+      month += 12;
+    }
+
+    ++month;
+    c = 365.25 * year;
+    e = 30.6 * month;
+    jd = c + e + day - 694039.09; // jd is total days elapsed
+    jd /= 29.5305882; // divide by the moon cycle
+    b = parseInt(jd); // int(jd) -> b, take integer part of jd
+    jd -= b; // subtract integer part to leave fractional part of original jd
+    b = Math.round(jd * 8); // scale fraction from 0-8 and round
+
+    if (b >= 8) b = 0; // 0 and 8 are the same so turn 8 into 0
+    return {phase: b, name: Moon.phases[b]};
+  }
+};
+
+// Moon.phase('2018', '01', '19');
+
+function toF (temp) {
+  return Math.floor((temp - 273.15) * 9/5 + 32);
+}
+
+function windDirection(deg) {
+  let degrees = windChart.map(function (el) { return el.degree; });
+
+  degrees.sort((a, b) => {
+    return Math.abs(deg - a) - Math.abs(deg - b);
+  });
+
+  for (var i=0; i < windChart.length; i++) {
+    if (windChart[i].degree === degrees[0]) {
+        return windChart[i];
+    }
+  }
+}
+
+function metersToMile(meters) {
+  return meters / 1609;
+}
+
+function uviChart(uvi) {
+  let intensity = '';
+  let color ='';
+
+  if (uvi < 2) {
+    intensity = 'low';
+    color = 'text-green-500';
+  } else if (uvi < 5 && uvi > 2) {
+    intensity = 'moderate';
+    color = 'text-blue-500';
+  } else if (uvi < 7 && uvi > 5) {
+    intensity = 'high';
+    color = 'text-yellow-500';
+  } else if (uvi < 10 && uvi > 7) {
+    intensity = 'very high';
+    color = 'text-orange-500';
+  } else {
+    intensity = 'extreme';
+    color = 'text-red-500';
+  }
+
+  return {intensity: intensity, color: color};
+}
+
+function pressure (value) {
+  return (value * 100) / 3386;
+}
+
+function humidityChart (value) {
+  if (value > 30) {
+    return {string: 'high', emoji: '🥵'};
+  } else if (value < 30) {
+    return {string: 'dry', emoij: '🌵'};
+  } else {
+    return {string: 'normal', emoji: '🤙'}
+  }
+}
+
+module.exports = {
+  uviChart: uviChart,
+  windDirection: windDirection,
+  Moon: Moon,
+  toF: toF,
+  pressure: pressure,
+  metersToMile: metersToMile,
+  humidityChart: humidityChart
+}
+
+},{"./wind_direction.json":8}],7:[function(require,module,exports){
+const icon = require('./weather-icons.js');
+const help = require('./weather-helpers.js');
+
 function createWeatherObject(city, weather) {
-  let tod = (weather.current.sunset * 1000) > Date.now() && (weather.current.sunrise * 1000) < Date.now() ? 'day' : 'night';
   var object = {
-    date: weather.current.dt,
-    tod: weather.current.sunset > weather.current.dt && weather.current.sunrise < weather.current.dt ? 'day' : 'night',
     city_name: city,
-    current_temp: toF(weather.current.temp),
-    high: toF(weather.daily[0].temp.max),
-    low: toF(weather.daily[0].temp.min),
-    description: weather.current.weather[0].main,
-    string: createWeatherString(weather.daily[0]),
-    icon: iconify(weather.current, tod),
-    hourly: createHourlyArray(weather),
-    daily: createDailyArray(city, weather.daily),
-    extras: createExtras(weather),
-    pop: weather.current.rain ? weather.daily[0].pop * 100 + '%' : null
-  };
+    current: help.createCurrentArray(weather.current),
+    hourly: help.createHourlyArray(weather.hourly, weather.current.sunrise, weather.current.sunset),
+    daily: help.createDailyArray(weather.daily),
+    lat: weather.lat,
+    lon: weather.lon
+  }
 
   return object;
 }
 
-function citySearch (search) {
-  var matcher = search;
-  var matchingKeys = cityCodes.filter(function(key) {
-    return key.name.toLowerCase().indexOf(matcher) === 0
-  });
-
-  return matchingKeys.map(function(key) {
-      return {
-        city: key.name,
-        state: key.state,
-        country: key.country,
-        lon: key.coord.lon,
-        lat: key.coord.lat,
-      };
-    });
-}
-
-function getWeather (city, callback) {
+function getWeather(city, callback) {
   var settings = {
-    url: 'http://api.openweathermap.org/data/2.5/weather?q=' + city + '&appid=4253ae682bded8fe54667e18d996e279',
+    url: 'https://api.openweathermap.org/data/2.5/weather?q=' + city + '&appid=4253ae682bded8fe54667e18d996e279',
     method: 'GET',
   };
-  $.ajax(settings).done(function (response) {
+  $.ajax(settings).done(function(response) {
     var geo = {
       url: 'https://api.openweathermap.org/data/2.5/onecall?lat=' + response.coord.lat + '&lon=' + response.coord.lon + '&exclude=minutely&appid=4253ae682bded8fe54667e18d996e279',
       method: 'GET',
     }
-    $.ajax(geo).done(function (geoResponse) {
-      console.log(geoResponse);
-      callback(response.name, geoResponse)
+    $.ajax(geo).done(function(geoResponse) {
+      var unsplash = {
+        url: 'https://api.unsplash.com/search/photos?page=1&query=' + city + '&orientation=landscape&client_id=7MZwsnhmpaHSUgesJtEf4SVPh8nLbxAgdh1pIh03g3Q',
+        method: 'GET',
+      }
+      $.ajax(unsplash).done(function(picResponse) {
+        let formattedResponse = createWeatherObject(response.name, geoResponse);
+        formattedResponse.picture = picResponse.results[0].urls.raw;
+        console.log(geoResponse);
+        callback(formattedResponse)
+      });
     });
   });
 }
 
 module.exports = {
-  getWeather: getWeather,
-  citySearch: citySearch,
-  createWeatherObject: createWeatherObject
+  getWeather: getWeather
 }
 
-},{"./wind_direction.json":5,"moment":2}],5:[function(require,module,exports){
+},{"./weather-helpers.js":4,"./weather-icons.js":5}],8:[function(require,module,exports){
 module.exports=[
   {
       "direction": "N",

@@ -1,15 +1,31 @@
-  ${weather.extras.map(function (extra) {
-    return `
-    <div class="flex flex-col text-center mx-4" style="flex: 0 0 auto; ">
-      <div class="bg-gray-300 rounded-xl w-32 text-right p-2 shadow-lg extra">
-        <div class="flex justify-between">
-          <span class="text-xs text-gray-600"><img class="justify-self-center h-6 w-6" src="/icons/${extra.icon}.png" /></span>
-          <div class="flex flex-col">
-            <span class="text-xs text-gray-600">${extra.title}</span>
-            <span class="text-xs text-gray-700 font-semibold">${extra.string}</span>
-          </div>
+${weather.hourly[0].extras.map(function (extra) {
+  return `
+  <div class="flex flex-col text-center mx-4" style="flex: 0 0 auto; ">
+    <div class="bg-gray-300 rounded-xl w-32 text-right p-2 shadow-lg extra">
+      <div class="flex justify-between">
+        <span class="text-xs text-gray-600"><img class="justify-self-center h-6 w-6" src="/icons/${extra.title}.png" /></span>
+        <div class="flex flex-col">
+          <span class="text-xs text-gray-600">${extra.title}</span>
+          ${extra.title === 'wind' ? `<span class="text-xs text-gray-700 font-semibold">${weathermath.windDirection(extra.value.wind_deg).direction} ${extra.value.wind_speed} mph</span>` : ''}
+          ${extra.title === 'pressure' ? `<span class="text-xs text-gray-700 font-semibold">${weathermath.pressure(extra.value).toFixed(2)} inHg</span>` : ''}
+          ${extra.title === 'visibility' ? `<span class="text-xs text-gray-700 font-semibold">${weathermath.metersToMile(extra.value).toFixed(2)} mi</span>` : ''}
+          ${extra.title === 'uvi' ? `<span class="text-xs text-gray-700 font-semibold">${weather.current.extras[2].value} is ${weathermath.uviChart(weather.current.extras[2].value).intensity} <i class="fas fa-circle ${weathermath.uviChart(weather.current.extras[2].value).color}"></i></span>` : ''}
+          ${extra.title === 'humidity' ? `<span class="text-xs text-gray-700 font-semibold">${extra.value}% is ${weathermath.humidityChart(extra.value).string} ${weathermath.humidityChart(extra.value).emoji}</span>` : ''}
         </div>
       </div>
     </div>
-    `
-  }).join("")}
+  </div>
+  `
+}).join("")}
+<div class="flex flex-col text-center mx-4" style="flex: 0 0 auto; ">
+  <div class="bg-gray-300 rounded-xl w-32 text-right p-2 shadow-lg extra flex flex-col">
+    <div class="flex justify-between">
+      <span class="text-xs text-gray-600"><img class="justify-self-center h-6 w-6" src="/icons/sunrise.png" /></span>
+      <span class="text-xs text-gray-600">${moment(weather.current.sunrise * 1000).format('h:mm a')}</span>
+    </div>
+    <div class="flex justify-between">
+      <span class="text-xs text-gray-600"><img class="justify-self-center h-6 w-6" src="/icons/sunset.png" /></span>
+      <span class="text-xs text-gray-600">${moment(weather.current.sunset * 1000).format('h:mm a')}</span>
+    </div>
+  </div>
+</div>

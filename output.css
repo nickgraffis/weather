@@ -21640,8 +21640,12 @@ video {
 
 :root {
   --background-url: url('/img/sunnytime.png');
-  --color-bg: #fed7d7;
-  --color-bg-transparent: rgb(254, 215, 215, 0);
+  --color-bg: rgb(253, 245, 214);
+  --color-cloud: rgba(255, 255, 255, 1);
+  --color-cloud-transparent: rgb(255, 255, 255, 0);
+  --color-cloud-seven: rgb(255, 255, 255, .7);
+  --color-cloud-five: rgb(255, 255, 255, .5);
+  --color-cloud-three: rgb(255, 255, 255, .3);
   --color-500:#4299e1;
   --color-600: #3182ce;
   --color-contrast: #3182ce;
@@ -21649,37 +21653,188 @@ video {
 
 [data-theme="dark"] {
   --background-url: url('/img/nighttime.png');
-  --color-bg: #4c51bf;
-  --color-bg-transparent: rgb(76, 81, 191, 0);
+  --color-bg: rgb(61, 100, 130);
+  --color-cloud: rgba(110, 141, 163, 1);
+  --color-cloud-transparent: rgba(110, 141, 163, 0);
+  --color-cloud-seven: rgba(110, 141, 163, .7);
+  --color-cloud-five: rgba(110, 141, 163, .5);
+  --color-cloud-three: rgba(110, 141, 163, .3);
   --color-500:#edf2f7;
   --color-600: #cbd5e0;
   --color-contrast: #3182ce;
 }
 
+.sky {
+  position: absolute;
+  width: 100%;
+  height: 100vh;
+  background-color: var(--color-bg);
+  z-index: 7;
+}
+
+.sun {
+  position: relative;
+  background-color: rgb(252, 242, 197);
+  height: 100px;
+  width: 100px;
+  top: 25px;
+  left: 25px;
+  border-radius: 100%;
+}
+
+.sun::before {
+  content: "";
+  position: absolute;
+  height: 75px;
+  width: 75px;
+  left: 12px;
+  top: 12px;
+  background-color: rgb(248, 227, 133);
+  border-radius: 100%;
+}
+
+.waves {
+  position:relative;
+  top: 18px;
+  width: 100%;
+  height: 12em;
+  margin-bottom:-7px; /*Fix for safari gap*/
+  min-height:100px;
+  max-height:100px;
+  z-index: 9;
+}
+
+.wave-wrapper {
+  position: relative;
+  background-image: linear-gradient(var(--color-cloud-transparent), var(--color-cloud),var(--color-cloud), var(--color-cloud), var(--color-cloud));
+  z-index: 8;
+}
+
+.cloud div:nth-child(1) {
+  width: 100px; height: 30px;
+  background: var(--color-cloud);
+  border-radius: 100px;
+  position: relative;
+  left: 250px;
+  top: -20px;
+}
+
+.cloud div:nth-child(1):before, .cloud div:nth-child(1):after {
+  content: '';
+  position: absolute;
+  background: var(--color-cloud);
+  width: 50px; height: 40px;
+  position: absolute; top: -7.5px; left: 5px;
+  border-radius: 50px;
+  transform: rotate(15deg);
+}
+
+.cloud div:nth-child(1):after {
+  width: 60px; height: 60px;
+  top: -27.5px; left: auto; right: 7.5px;
+}
+
+.cloud div:nth-child(2) {
+  width: 100px; height: 30px;
+  background: var(--color-cloud);
+  border-radius: 100px;
+  position: relative;
+  top: -20px;
+  left: 80px;
+}
+
+.cloud div:nth-child(2):before, .cloud div:nth-child(2):after {
+  content: '';
+  position: absolute;
+  background: var(--color-cloud);
+  width: 50px; height: 40px;
+  position: absolute; top: -7.5px; left: 5px;
+  border-radius: 50px;
+  transform: rotate(15deg);
+}
+
+.cloud div:nth-child(2):after {
+  width: 60px; height: 60px;
+  top: -27.5px; left: auto; right: 7.5px;
+}
+
+#parallax-1 {
+  fill: var(--color-cloud-seven);
+}
+
+#parallax-2 {
+  fill: var(--color-cloud-five);
+}
+
+#parallax-3 {
+  fill: var(--color-cloud-three);
+}
+
+#parallax-4 {
+  fill: var(--color-cloud);
+}
+
+.moon {
+  top: 25px;
+  left: 25px;
+  border-radius: 50%;
+  width: 100px;
+  height: 100px;
+  position: relative;
+  box-shadow: inset 45px -45px 0 0 #fff;
+  transform: scale(1) rotate(-2deg);
+  transition: box-shadow 0.5s ease 0s, transform 0.4s ease 0.1s;
+}
+
+.moon:before {
+  content: '';
+  width: inherit;
+  height: inherit;
+  border-radius: inherit;
+  position: absolute;
+  left: 0;
+  top: 0;
+  transition: background 0.3s ease;
+}
+
+.moon:after {
+  content: '';
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  margin: -10px 0 0 -10px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  box-shadow: 0 -23px 0 #5628ee, 0 23px 0 #5628ee, 23px 0 0 #5628ee, -23px 0 0 #5628ee, 15px 15px 0 #5628ee, -15px 15px 0 #5628ee, 15px -15px 0 #5628ee, -15px -15px 0 #5628ee;
+  transform: scale(0);
+  transition: all 0.3s ease;
+}
+
 #application {
-  background: var(--background-url);
+  /* background: var(--background-url);
   background-size: cover;
-  background-repeat: no-repeat;
+  background-repeat: no-repeat; */
 }
 
 weather-extras {
-  background-image: linear-gradient(var(--color-bg-transparent), var(--color-bg));
+  /* background-image: linear-gradient(var(--color-bg-transparent), var(--color-bg)); */
 }
 
 weather-hourly {
-  background-color: var(--color-bg);
+  /* background-color: var(--color-bg); */
 }
 
 weather-indepth {
-  background-color: var(--color-bg);
+  /* background-color: var(--color-bg); */
 }
 
 weather-daily {
-  background-color: var(--color-bg);
+  /* background-color: var(--color-bg); */
 }
 
 #nav-bar {
-  background-color: var(--color-bg);
+  background-color: var(--color-cloud);
   cursor: pointer;
 }
 
@@ -21718,12 +21873,42 @@ weather-daily {
   transition: all 10s ease;
 }
 
+.come-in {
+  -webkit-animation: come-in 0.8s ease forwards;
+          animation: come-in 0.8s ease forwards;
+}
+
+.come-out {
+  -webkit-animation: come-out 0.8s ease forwards;
+          animation: come-out 0.8s ease forwards;
+}
+
 .fade-in {
   animation: fadeIn ease 1s;
   -webkit-animation: fadeIn ease 1s;
   -moz-animation: fadeIn ease 1s;
   -o-animation: fadeIn ease 1s;
   -ms-animation: fadeIn ease 1s;
+}
+
+@-webkit-keyframes come-in {
+  to { transform: translateY(0);
+  }
+}
+
+@keyframes come-in {
+  to { transform: translateY(0);
+  }
+}
+
+@-webkit-keyframes come-out {
+  to { transform: translateY(150px);
+  }
+}
+
+@keyframes come-out {
+  to { transform: translateY(150px);
+  }
 }
 
 @keyframes fadeIn {

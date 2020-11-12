@@ -1,30 +1,11 @@
-const w = require('./weather.js');
+const w = require('./weather2.js');
 const store = require('./storage.js');
-
-$(document).ready(function() {
-  $('.extra').on('click', function () {
-    console.log('OK');
-    $(this).addClass('w-10/12 h-48 absolute');
-    $(this).css('left', '9%');
-    $(this).css('top', 'calc(50% - 12em)');
-  });
-});
-
-// window.expand = function (clickedElement) {
-//   if (clickedElement.getAttribute('data-size') === 'expand') {
-//     clickedElement.setAttribute('data-size', 'small');
-//     clickedElement.classList.remove('absolute');
-//     clickedElement.classList.remove('h-48');
-//     clickedElement.classList.remove('w-10/12');
-//   } else {
-//     clickedElement.setAttribute('data-size', 'expand');
-//     clickedElement.classList += ' w-10/12 absolute h-48';
-//   }
-// }
+const moment = require('moment');
+const weathermath = require('./weather-math.js');
 
 var searchShowing = false;
 var screenSize;
-var currentCity = null;
+var currentCity = 'San Fransisco';
 
 function capitolize(str) {
   let words = str.split(' ');
@@ -67,28 +48,28 @@ window.search = function (city = null) {
 
 window.showSearch = function () {
   if (searchShowing) {
-    $('#nav-bar').removeClass('h-screen pt-12 bg-opacity-50');
+    $('#nav-bar').removeClass('h-screen pt-12 bg-opacity-20');
     searchShowing= false;
   } else {
-    $('#nav-bar').addClass('h-screen pt-12 bg-opacity-50');
+    $('#nav-bar').addClass('h-screen pt-12 bg-opacity-20');
     searchShowing = true;
   }
 }
 
 window.showHistory = function () {
   if (searchShowing) {
-    $('#nav-bar').removeClass('h-screen pt-12 bg-opacity-50 static');
+    $('#nav-bar').removeClass('h-screen pt-12 bg-opacity-20 static');
     searchShowing= false;
     document.getElementsByTagName('weather-history')[0].innerHTML = '';
 
   } else {
-    $('#nav-bar').addClass('h-screen pt-12 bg-opacity-50 static');
+    $('#nav-bar').addClass('h-screen pt-12 bg-opacity-20 static');
     searchShowing = true;
     document.getElementsByTagName('weather-history')[0].innerHTML = '';
     let historyItems = store.getCitiesArray();
     historyItems.map(i => {
-      w.getWeather(i.name, function (city, response) {
-        let weather = w.createWeatherObject(city, response);
+      w.getWeather(i.name, function (response) {
+        let weather = response;
         let file = eval('`' + getFile('./components/history.html') + '`');
         let div = document.createElement('DIV');
         div.classList = 'flex justify-between history-item-in';
@@ -102,11 +83,11 @@ window.showHistory = function () {
 window.changeFavorite = function (id, event) {
   let favorite = document.querySelector('.favorite');
   favorite.classList.remove('favorite');
-  favorite.innerHTML = '<svg height="20" width="20" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path stroke="#a0aec0" fill="#e2e8f0" d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/></svg>';
+  favorite.innerHTML = '<span style="color:#e2e8f0;"><i class="fas fa-star"></i></span>';
   let star = event.currentTarget;
   console.log(event.currentTarget);
   star.classList.add('favorite');
-  star.innerHTML = '<svg height="20" width="20" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path stroke="#a0aec0" fill="#3182ce" d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/></svg>';
+  star.innerHTML = '<span style="color: #3182ce;"><i class="fas fa-star"></i></span>';
   store.updateFavoriteCity(id);
 }
 
@@ -118,13 +99,19 @@ window.deleteCity = function (id, event) {
 }
 
 var render = {
-  smallScreen: function (city, response) {
-    var weather = w.createWeatherObject(city, response);
+  smallScreen: function (response) {
+    var weather = response;
     console.log(weather);
-    if (weather.tod === 'night') {
+    if (weather.current.tod === 'night') {
       document.body.setAttribute('data-theme', 'dark');
+      if (document.querySelector('.sun')) {
+        document.querySelector('.sun').classList = 'moon';
+      }
     } else {
       document.body.setAttribute('data-theme', '');
+      if (document.querySelector('.moon')) {
+        document.querySelector('.moon').classList = 'sun';
+      }
     }
     document.getElementsByTagName('weather-title')[0].innerHTML = eval('`' + getFile('./components/title.html') + '`');
     document.getElementsByTagName('weather-extras')[0].innerHTML = eval('`' + getFile('./components/extras.html') + '`');
@@ -132,13 +119,16 @@ var render = {
     document.getElementsByTagName('weather-daily')[0].innerHTML = eval('`' + getFile('./components/daily.html') + '`');
     document.getElementsByTagName('weather-indepth')[0].innerHTML = eval('`' + getFile('./components/indepth.html') + '`');
   },
-  bigScreen: function (city, response) {
-    var weather = w.createWeatherObject(city, response);
+  bigScreen: function (response) {
+    var weather = response;
     console.log(weather);
     if (weather.tod === 'night') {
       document.body.setAttribute('data-theme', 'dark');
     }
     document.getElementsByTagName('weather-title')[0].innerHTML = eval('`' + getFile('./components/big/title.html') + '`');
+    document.getElementsByTagName('weather-weekly')[0].innerHTML = eval('`' + getFile('./components/big/weekly.html') + '`');
+    document.getElementsByTagName('weather-extras')[0].innerHTML = eval('`' + getFile('./components/big/extras.html') + '`');
+
   }
 }
 
@@ -147,14 +137,10 @@ var app = document.querySelector('#application');
 setInterval(function(){
   if (window.innerWidth <= 414) {
     if (app.getAttribute('data-size') != 'small') {
-      app.setAttribute('data-size', 'small');
-      app.innerHTML = eval('`' + getFile('./templates/small.html') + '`');
-
       let city;
       if (currentCity != null) {
         city = currentCity;
       } else {
-        console.log(store.getCitiesArray());
         if (store.getCitiesArray().length > 0) {
           city = store.queryFavoriteCity().name;
         } else {
@@ -162,8 +148,15 @@ setInterval(function(){
         }
       }
 
+      if (currentCity !== city) {
+        currentCity = city;
+        w.getWeather(city, render.smallScreen);
+      }
       currentCity = city;
       w.getWeather(city, render.smallScreen);
+
+      app.setAttribute('data-size', 'small');
+      app.innerHTML = eval('`' + getFile('./templates/small.html') + '`');
 
       screenSize = 'small';
     } else {

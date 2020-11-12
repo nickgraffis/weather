@@ -1,5 +1,3 @@
-const moment = require('moment');
-// var cityCodes = require('./city.list.json');
 var windChart = require('./wind_direction.json');
 
 var Moon = {
@@ -46,26 +44,54 @@ function windDirection(deg) {
   }
 }
 
+function metersToMile(meters) {
+  return meters / 1609;
+}
+
 function uviChart(uvi) {
   let intensity = '';
+  let color ='';
 
   if (uvi < 2) {
     intensity = 'low';
+    color = 'text-green-500';
   } else if (uvi < 5 && uvi > 2) {
     intensity = 'moderate';
+    color = 'text-blue-500';
   } else if (uvi < 7 && uvi > 5) {
     intensity = 'high';
+    color = 'text-yellow-500';
   } else if (uvi < 10 && uvi > 7) {
     intensity = 'very high';
+    color = 'text-orange-500';
   } else {
     intensity = 'extreme';
+    color = 'text-red-500';
   }
 
-  return intensity;
+  return {intensity: intensity, color: color};
+}
+
+function pressure (value) {
+  return (value * 100) / 3386;
+}
+
+function humidityChart (value) {
+  if (value > 30) {
+    return {string: 'high', emoji: '🥵'};
+  } else if (value < 30) {
+    return {string: 'dry', emoij: '🌵'};
+  } else {
+    return {string: 'normal', emoji: '🤙'}
+  }
 }
 
 module.exports = {
-  getWeather: getWeather,
-  citySearch: citySearch,
-  createWeatherObject: createWeatherObject
+  uviChart: uviChart,
+  windDirection: windDirection,
+  Moon: Moon,
+  toF: toF,
+  pressure: pressure,
+  metersToMile: metersToMile,
+  humidityChart: humidityChart
 }

@@ -1,5 +1,22 @@
-<div class="flex flex-col justify-center">
-  ${weather.description} ${weather.icon ? `<img class="inline-block align-middle h-48 w-48" src="/icons/${weather.icon}.png" />` : ''}
-  <span class="color-500 text-6xl text-extrabold" style="font-size: 100px;">${weather.current_temp}°</span>
-  <p class="color-500 text-lg">It's <strong class="color-600">${weather.description} ${weather.icon ? `<img class="inline-block align-middle h-10 w-10" src="/icons/${weather.icon}.png" />` : ''}</strong></p>
+<div class="flex flex-col justify-between items-center p-4 h-full">
+  <div class="grid grid-cols-8 mx-4 bg-white p-4 mb-4 rounded-xl text-blue-600">
+    <span onclick="search()" class="place-self-center text-md justify-self-start mx-4"><i class="fas fa-search"></i></span>
+    <input placeholder="Search for cities..." class="appearance-none w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none justify-self-stretch col-span-6" id="searchInput" type="text" placeholder="">
+    <div onclick="showHistory()" class="col-span-1 h-10 w-10 rounded-full justify-self-start place-self-center flex justify-center items-center hover:bg-blue-100">
+      <span class="text-md"><i class="fas fa-th-list"></i></span>
+    </div>
+  </div>
+  <div class="flex flex-col items-center w-full">
+    ${weather.current.weather[0].icon ? `<img class="inline-block align-middle h-48 w-48" src="/icons/${weather.current.weather[0].icon}.png" />` : ''}
+    <span class="color-500 text-6xl text-extrabold" style="font-size: 100px;">${weathermath.toF(weather.current.temp)}°</span>
+    <p class="color-500 text-lg place-self-start p-4 border-b-2 border-gray-300 w-full"><strong class="color-600">${moment(weather.current.dt).format('dddd')}</strong>, ${moment(weather.current.dt).format('LT')}</p>
+    <div class="place-self-start p-4">
+      ${weather.current.weather.map(i => {
+        return `  <p class="color-500 text-lg">It's <strong class="color-600">${i.description} ${i.icon ? `<img class="inline-block align-middle h-10 w-10" src="/icons/${i.icon}.png" />` : ''}</strong></p>`
+      }).join('')}
+    </div>
+  </div>
+  <div class="flex items-center justify-center h-40 w-full rounded-3xl m-4" style="background: url('${weather.picture}'); background-size: cover; background-repeat: no-repeat;">
+    <span class="text-white text-4xl text-bold">${capitolize(weather.city_name)}</span>
+  </div>
 </div>

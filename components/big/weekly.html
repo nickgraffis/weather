@@ -1,0 +1,14 @@
+${weather.daily.map(function (daily) {
+  return `
+  <div class="mx-4 p-4" style="flex: 0 0 auto; ">
+    <div class="bg-gray-300 rounded-xl w-32 text-right p-2 shadow-lg extra flex flex-col items-center text-center px-8">
+      <span class="text-lg text-gray-600">${moment(daily.dt * 1000).format('ddd')}</span>
+      <span class="text-lg text-gray-600"><img class="justify-self-center h-12 w-12" src="/icons/${daily.weather[0].icon}.png" /></span>
+      <div class="flex justify-between flex-1 self-stretch">
+        <span class="text-lg text-gray-700 font-semibold">${weathermath.toF(daily.temp.max)}</span>
+        <span class="text-lg text-gray-400 font-semibold">${weathermath.toF(daily.temp.min)}</span>
+      </div>
+    </div>
+  </div>
+  `
+}).join("")}

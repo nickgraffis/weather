@@ -1,9 +1,12 @@
-<div class="place-self-center text-center flex flex-col pt-4">
-  <span class="color-600 text-xl font-extrabold">${capitolize(weather.city_name)}</span>
-  <p class="color-500 text-lg">It's <strong class="color-600">${weather.description} ${weather.icon ? `<img class="inline-block align-middle h-10 w-10" src="/icons/${weather.icon}.png" />` : ''}</strong></p>
-  <span class="color-500 text-6xl text-extrabold" style="font-size: 25vw;">${weather.current_temp}°</span>
-  <span class="color-500 text-3xl text-right pr-2"><strong class="color-600">${weather.high}°</strong> ${weather.low}°</span>
-  <div id="brand" class="flex fade-in" style="display: none;">
-    <span class="color-600 text-xl font-extrabold justify-self-start">${capitolize(weather.city_name)}</span>
+<div class="place-self-center text-center flex flex-col pt-4 w-screen">
+  <span class="color-600 text-2xl py-2 font-extrabold tracking-widest uppercase">${weather.city_name}</span>
+  <span class="text-gray-500 text-md py-2 font-semibold tracking-widest uppercase">${moment(weather.current.dt * 1000).format('dddd | MMM M | h:mm a')}</span>
+  <p class="color-500 text-lg">It's <strong class="color-600">${weather.current.weather[0].description} ${weather.current.weather[0].icon ? `<img class="inline-block align-middle h-10 w-10" src="/icons/${weather.current.weather[0].icon}.png" />` : ''}</strong></p>
+  <div class="flex justify-between items-center px-8">
+    <span class="color-500 text-xl text-semibold">${weathermath.toF(weather.daily[0].temp.eve)}</span>
+    <span class="color-500 text-3xl text-semibold">${weathermath.toF(weather.daily[0].temp.max)}</span>
+    <span class="color-500 text-6xl text-extrabold justify-self-center">${weathermath.toF(weather.current.temp)}°</span>
+    <span class="color-500 text-3xl text-semibold">${weathermath.toF(weather.daily[0].temp.min)}</span>
+    <span class="color-500 text-xl text-semibold">${weathermath.toF(weather.daily[0].temp.morn)}</span>
   </div>
 </div>

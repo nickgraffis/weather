@@ -1,0 +1,9 @@
+${weather.current.extras.map(function (extra) {
+  return `
+  <div class="mx-4 p-4">
+    <div class="bg-gray-300 rounded-xl w-full p-2 shadow-lg extra flex flex-col items-center">
+      <span class="text-gray-400 text-xl place-self-start">${extra.title === 'uvi' ? 'UV Index' : capitolize(extra.title)}</span>
+      ${eval('`' + getFile('./components/big/extras/' + extra.title + '.html') + '`')}
+    </div>
+  </div>
+  `}).join("")}

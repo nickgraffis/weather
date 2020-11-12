@@ -8,6 +8,8 @@
   <script src="https://kit.fontawesome.com/7652f157a9.js" crossorigin="anonymous"></script>
   <title>Weather</title>
   <style>
+  body::-webkit-scrollbar {
+    display: none; }
 .temp::-webkit-scrollbar {
   display: none; }
   #wrapper::-webkit-scrollbar {
@@ -25,22 +27,96 @@
         -ms-transition: all 1s ease;
             transition: all 1s ease;
   }
+
+  .mask {
+	 position: relative;
+	 overflow: hidden;
+	 display: block;
+	 width: 12.5rem;
+	 height: 6.25rem;
+	 margin: 1.25rem;
+}
+ .semi-circle {
+	 position: relative;
+	 display: block;
+	 width: 12.5rem;
+	 height: 6.25rem;
+	 background: linear-gradient(to right, #c0392b 0%, #f1c40f 50%, #1abc9c 100%);
+	 border-radius: 50% 50% 50% 50% / 100% 100% 0% 0%;
+}
+ .semi-circle::before {
+	 content: "";
+	 position: absolute;
+	 bottom: 0;
+	 left: 50%;
+	 z-index: 2;
+	 display: block;
+	 width: 8.75rem;
+	 height: 4.375rem;
+	 margin-left: -4.375rem;
+	 background: #fff;
+	 border-radius: 50% 50% 50% 50% / 100% 100% 0% 0%;
+}
+ .semi-circle--mask {
+	 position: absolute;
+	 top: 0;
+	 left: 0;
+	 width: 12.5rem;
+	 height: 12.5rem;
+	 background: transparent;
+	 transform-origin: center center;
+	 backface-visibility: hidden;
+	 transition: all 0.3s ease-in-out;
+}
+ .semi-circle--mask::before {
+	 content: "";
+	 position: absolute;
+	 top: 0;
+	 left: 0%;
+	 z-index: 2;
+	 display: block;
+	 width: 12.625rem;
+	 height: 6.375rem;
+	 margin: -1px 0 0 -1px;
+	 background: #f2f2f2;
+	 border-radius: 50% 50% 50% 50% / 100% 100% 0% 0%;
+}
   </style>
 </head>
 <body>
-  <div id="application" class="bg-gray-200">
-
+  <div id="application" class="" style="display: flex;
+  align-items: center;
+  justify-content: center;">
   </div>
   <script>
-  window.onscroll = function(e) {
-      var current = window.scrollY;
-      console.log(current);
-      if (current > 100) {
-        document.getElementById('brand').style.display = null;
-      } else {
-        document.getElementById('brand').style.display = 'none';
-      }
-    };
+  function calcTop(value) {
+    if (value > 0) {
+      return 30 - (value / 10);
+    } else {
+    }
+  }
+
+  function calcHeight(value) {
+      let height = document.querySelector('.wave-wrapper').style.height.split('v');
+      return 50 + (value / 10);
+  }
+  window.addEventListener('scroll', function(){
+    let wrapper = document.querySelector('#wrapper');
+    let scroll = wrapper.scrollTop;
+    let navbar = document.querySelector('#nav-bar');
+    let wave = document.querySelector('.wave-wrapper');
+    wave.style.top = calcTop(scroll) + 'vh';
+    wave.style.height = calcHeight(scroll) + 'vh';
+    if (scroll > 100) {
+        navbar.style.transform = 'translateY(150px);';
+        navbar.classList.remove('come-out');
+        navbar.classList.add('come-in');
+    } else {
+          navbar.style.transform = 'translateY(0px);';
+          navbar.classList.remove('come-in');
+          navbar.classList.add('come-out');
+    }
+  }, true)
   </script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script src="main.js"></script>
