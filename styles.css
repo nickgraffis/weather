@@ -30,6 +30,10 @@
   --color-contrast: #3182ce;
 }
 
+body {
+  height: -webkit-fill-avaliable;
+}
+
 .sky {
   position: absolute;
   width: 100%;
