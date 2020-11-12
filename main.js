@@ -6,7 +6,7 @@ const weathermath = require('./weather-math.js');
 
 var searchShowing = false;
 var screenSize;
-var currentCity = 'San Fransisco';
+var currentCity = null;
 
 function capitolize(str) {
   let words = str.split(' ');
