@@ -7,7 +7,7 @@
   <div onclick="search('${weather.city_name}')" class="flex justify-between col-span-10 p-4">
     <div class="flex justify-between self-start items-center">
       <span class="text-2xl font-semibold text-gray-600">&nbsp${weather.city_name}&nbsp</span>
-      ${weather.current.weather[0].icon ? `<img class="h-10 w-10" src="/icons/${weather.current.weather[0].icon}.png" />` : ''}
+      ${weather.current.weather[0].icon ? `<img class="h-10 w-10" src="icons/${weather.current.weather[0].icon}.png" />` : ''}
       ${weather.pop ? `<span class="text font-semibold text-blue-600"> &nbsp${weather.pop}</span>` : ''}
     </div>
     <div class="">
