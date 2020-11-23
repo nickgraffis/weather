@@ -1,0 +1,9 @@
+<div class="place-self-center w-full h-full justify-between flex flex-col">
+    <span class="text-4xl text-gray-700 place-self-start">${extra.value.wind_speed} mph</span>
+    <div class="flex w-full justify-self-start">
+      <div class="arrow border-4 border-blue-600 rounded-full flex justify-center items-center w-10 h-10" style="transform: rotate(${extra.value.wind_deg}deg);">
+        <i style="transform: rotate(125deg);" class="fas fa-location-arrow"></i>
+      </div>
+      <span class="z-10 text-2xl text-gray-700 ml-4">${weathermath.windDirection(extra.value.wind_deg).direction}</span>
+    </div>
+</div>

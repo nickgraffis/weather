@@ -1,13 +1,24 @@
-<div class="bg-gray-200 h-screen grid gap-0 grid-cols-12 h-screen">
-  <div class="left bg-white col-span-3 rounded-r-xl">
-    <weather-title></weather-title>
+<div class="bg-gray-200 h-screen grid gap-0 grid-cols-12 h-screen overflow-hidden">
+  <div class="left sidebar col-span-3 rounded-r-3xl" style="box-shadow: 10px 0 5px -2px rgba(0, 0, 0, 0.25);">
+    <div class="sun" style="position: absolute; top: 150px;"></div>
+    <div class="cloud" style="position: absolute; top: 175px;">
+      <div></div>
+      <div></div>
+    </div>
+    <div class="h-full z-10">
+      <weather-title></weather-title>
+    </div>
   </div>
-  <div class="right h-full col-span-9">
+  <div class="right h-full col-span-9 overflow-y-scroll overflow-x-hidden">
   <div class="flex mx-12 mb-8">
-    <p class="text-2xl text-gray-500 m-6">Today</p>
-    <p class="text-2xl text-gray-800 underline m-6">Weekly</p>
+    <p onclick="changeDisplay()" class="text-2xl text-gray-500 m-6 cursor-pointer" id="today">Today</p>
+    <p onclick="changeDisplay()" class="text-2xl text-gray-500 cursor-pointer text-gray-800 m-6 border-b-2 border-gray-800 pb-2" id="week">Week</p>
   </div>
-  <weather-weekly class="flex justify-between temp h-48 mx-12" style="flex-wrap: nowrap; overflow-x: auto;"></weather-weekly>
-  <weather-extras class="grid grid-flow-col grid-rows-2 mx-12"></weather-extras>
+  <weather-weekly class="flex justify-between temp h-48 mx-12" style="flex-wrap: nowrap; overflow-x: auto;" id="dispalySetting"></weather-weekly>
+  <div class="flex mx-12 mb-8">
+    <p class="text-2xl text-gray-700 m-6 border-b-2 border-gray-800 pb-2" id="today">Today's Snapshot</p>
+  </div>
+  <weather-raining class="mx-12"></weather-raining>
+  <weather-extras class="grid grid-flow-col grid-rows-3 mx-12"></weather-extras>
   </div>
 </div>

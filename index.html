@@ -8,8 +8,53 @@
   <script src="https://kit.fontawesome.com/7652f157a9.js" crossorigin="anonymous"></script>
   <title>Weather</title>
   <style>
+  .triangle {
+	 line-height: 1;
+	 border-top-right-radius: 20%;
+	 background-color: black;
+	 text-align: left;
+	 display: inline-block;
+	 margin: 1rem;
+	 transition: background-color .45s ease;
+}
+ .triangle:hover {
+	 background-color: ;
+}
+ .triangle:before, .triangle:after {
+	 content: '';
+	 position: absolute;
+	 background-color: inherit;
+	 width: 100%;
+	 height: 100%;
+	 border-top-right-radius: 20%;
+}
+ .triangle.up {
+	 transform: rotate(60deg) skewX(-30deg) scale(1,.866);
+	 transform-origin: 30% 90%;
+}
+ .triangle.down {
+	 transform: rotate(-120deg) skewX(-30deg) scale(1,.866);
+	 transform-origin: 30% 45%;
+}
+ .triangle.left {
+	 transform: rotate(90deg) skewX(-30deg) scale(1,.866);
+	 transform-origin: 45% 75%;
+}
+ .triangle.right {
+	 transform: rotate(30deg) skewX(-30deg) scale(1,.866);
+	 transform-origin: 45% 75%;
+}
+ .triangle:before {
+	 transform: rotate(-135deg) skewX(-45deg) scale(1.414,.707) translate(0,-50%);
+}
+ .triangle:after {
+	 transform: rotate(135deg) skewY(-45deg) scale(.707,1.414) translate(50%);
+}
+
   body::-webkit-scrollbar {
     display: none; }
+    weather-history::-webkit-scrollbar {
+      display: none; }
 .temp::-webkit-scrollbar {
   display: none; }
   #wrapper::-webkit-scrollbar {
@@ -20,6 +65,12 @@
     -webkit-transition: all 1s ease;
     transition: all 1s ease;
   }
+  #searchBig::-webkit-scrollbar {
+    display: none; }
+#searchBig {
+  -webkit-transition: all 1s ease;
+  transition: all 1s ease;
+}
   .extra {
     -webkit-transition: all 1s ease;
        -moz-transition: all 1s ease;
@@ -41,7 +92,6 @@
 	 display: block;
 	 width: 12.5rem;
 	 height: 6.25rem;
-	 background: linear-gradient(to right, #c0392b 0%, #f1c40f 50%, #1abc9c 100%);
 	 border-radius: 50% 50% 50% 50% / 100% 100% 0% 0%;
 }
  .semi-circle::before {
@@ -54,7 +104,7 @@
 	 width: 8.75rem;
 	 height: 4.375rem;
 	 margin-left: -4.375rem;
-	 background: #fff;
+	 background: rgb(227, 232, 239);
 	 border-radius: 50% 50% 50% 50% / 100% 100% 0% 0%;
 }
  .semi-circle--mask {
@@ -83,7 +133,7 @@
 }
   </style>
 </head>
-<body>
+<body class="overflow-hidden">
   <div id="application" class="" style="display: flex;
   align-items: center;
   justify-content: center;">

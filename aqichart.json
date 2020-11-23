@@ -1,0 +1,184 @@
+[
+  {
+      "title": "o3",
+      "ranges": [
+        {
+          "high": 0.124,
+          "low": 0,
+          "aqi_low": 0,
+          "aqi_high": 50
+        },
+        {
+          "high": 0.164,
+          "low": 0.125,
+          "aqi_low": 101,
+          "aqi_high": 150
+        },
+        {
+          "high": 0.204,
+          "low": 0.165,
+          "aqi_low": 151,
+          "aqi_high": 200
+        },
+        {
+          "high": 0.404,
+          "low": 0.205,
+          "aqi_low": 201,
+          "aqi_high": 300
+        },
+        {
+          "high": 0.504,
+          "low": 0.405,
+          "aqi_low": 301,
+          "aqi_high": 400
+        },
+        {
+          "high": 0.604,
+          "low": 0.505,
+          "aqi_low": 401,
+          "aqi_high": 500
+        }
+      ]
+  },
+  {
+      "title": "no2",
+      "ranges": [
+        {
+          "high": 0.053,
+          "low": 0,
+          "aqi_low": 0,
+          "aqi_high": 50
+        },
+        {
+          "high": 0.1,
+          "low": 0.054,
+          "aqi_low": 51,
+          "aqi_high": 100
+        },
+        {
+          "high": 0.360,
+          "low": 0.101,
+          "aqi_low": 101,
+          "aqi_high": 150
+        },
+        {
+          "high": 0.649,
+          "low": 0.361,
+          "aqi_low": 151,
+          "aqi_high": 200
+        },
+        {
+          "high": 1.249,
+          "low": 0.650,
+          "aqi_low": 201,
+          "aqi_high": 300
+        },
+        {
+          "high": 1.649,
+          "low": 1.250,
+          "aqi_low": 301,
+          "aqi_high": 400
+        },
+        {
+          "high": 2.049,
+          "low": 1.650,
+          "aqi_low": 401,
+          "aqi_high": 500
+        },
+      ]
+  },
+  {
+      "title": "co",
+      "ranges": [
+        {
+          "high": 4.4,
+          "low": 0,
+          "aqi_low": 0,
+          "aqi_high": 50
+        },
+        {
+          "high": 9.4,
+          "low": 4.5,
+          "aqi_low": 51,
+          "aqi_high": 100
+        },
+        {
+          "high": 12.4,
+          "low": 9.5,
+          "aqi_low": 101,
+          "aqi_high": 150
+        },
+        {
+          "high": 15.4,
+          "low": 12.5,
+          "aqi_low": 151,
+          "aqi_high": 200
+        },
+        {
+          "high": 30.4,
+          "low": 15.5,
+          "aqi_low": 201,
+          "aqi_high": 300
+        },
+        {
+          "high": 40.4,
+          "low": 30.5,
+          "aqi_low": 301,
+          "aqi_high": 400
+        },
+        {
+          "high": 50.4,
+          "low": 40.5,
+          "aqi_low": 401,
+          "aqi_high": 500
+        },
+      ]
+  },
+  {
+      "title": "pm25",
+      "ranges": [
+        {
+          "high": 12,
+          "low": 0,
+          "aqi_low": 0,
+          "aqi_high": 50
+        },
+        {
+          "high": 35.4,
+          "low": 12.1,
+          "aqi_low": 51,
+          "aqi_high": 100
+        },
+        {
+          "high": 55.4,
+          "low": 35.5,
+          "aqi_low": 101,
+          "aqi_high": 150
+        },
+        {
+          "high": 150.4,
+          "low": 55.5,
+          "aqi_low": 151,
+          "aqi_high": 200
+        },
+        {
+          "high": 250.4,
+          "low": 150.5,
+          "aqi_low": 201,
+          "aqi_high": 300
+        },
+        {
+          "high": 350.4,
+          "low": 250.5,
+          "aqi_low": 301,
+          "aqi_high": 400
+        },
+        {
+          "high": 500.4,
+          "low": 350.5,
+          "aqi_low": 401,
+          "aqi_high": 500
+        },
+      ]
+  },
+]

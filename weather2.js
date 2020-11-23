@@ -1,5 +1,6 @@
 const icon = require('./weather-icons.js');
 const help = require('./weather-helpers.js');
+const weathermath = require('./weather-math.js');
 
 function createWeatherObject(city, weather) {
   var object = {
@@ -10,7 +11,8 @@ function createWeatherObject(city, weather) {
     minutely: weather.minutely,
     lat: weather.lat,
     lon: weather.lon,
-    string: help.createWeatherString(weather)
+    string: help.createWeatherString(weather),
+    timezone: weather.timezone
   }
 
   return object;
@@ -27,18 +29,30 @@ function getWeather(city, callback) {
       method: 'GET',
     }
     $.ajax(geo).done(function(geoResponse) {
-      var unsplash = {
-        url: 'https://api.unsplash.com/search/photos?page=1&query=' + city + '&orientation=landscape&client_id=7MZwsnhmpaHSUgesJtEf4SVPh8nLbxAgdh1pIh03g3Q',
+      var iqAir = {
+        url: 'https://api.openaq.org/v1/latest?country=' + response.sys.country + '&limit=5000',
         method: 'GET',
       }
-      $.ajax(unsplash).done(function(picResponse) {
-        let formattedResponse = createWeatherObject(response.name, geoResponse);
-        formattedResponse.picture = picResponse.results[0].urls.raw;
-        console.log(geoResponse);
-        callback(formattedResponse)
+      $.ajax(iqAir).done(function (iqResponse) {
+        var unsplash = {
+          url: 'https://api.unsplash.com/search/photos?page=1&query=' + city + '&orientation=landscape&client_id=7MZwsnhmpaHSUgesJtEf4SVPh8nLbxAgdh1pIh03g3Q',
+          method: 'GET',
+        }
+        $.ajax(unsplash).done(function(picResponse) {
+          let formattedResponse = createWeatherObject(response.name, geoResponse);
+          formattedResponse.air_quality = weathermath.findAQ(response.coord.lat, response.coord.lon, iqResponse);
+          formattedResponse.picture = picResponse.results[0].urls.raw;
+          formattedResponse.country_name = response.sys.country;
+          console.log(geoResponse);
+          console.log(response);
+          callback(formattedResponse)
+        });
       });
     });
-  });
+  }).fail(function(xhr, status, error) {
+      var errorMessage = xhr.status + ': ' + xhr.statusText
+      callback({city_name: 'Error', message: errorMessage});
+});
 }
 
 module.exports = {

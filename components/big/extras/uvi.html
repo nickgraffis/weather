@@ -1,7 +1,11 @@
 <div class="place-self-center">
   <div class="mask">
-    <div class="semi-circle" style="background: #1abc9c;"></div>
-    <div class="semi-circle--mask" style="transform: rotate(${extra.value * 15}deg) translate3d(0, 0, 0);">
+    <div class="semi-circle bg-${weathermath.uviChart(extra.value).color}"></div>
+    <div class="semi-circle--mask" style="transform: rotate(${(extra.value * 15) > 180 ? 180 : extra.value * 15}deg) translate3d(0, 0, 0);">
     </div>
+  </div>
+  <div class="relative flex items-center flex-col -mt-16" style="left: 0px;">
+    <span class="z-10 text-2xl text-gray-700 font-semibold">${extra.value}</span>
+    <span class="z-10 text-2xl text-gray-700 font-semibold">${weathermath.uviChart(extra.value).intensity}</span>
   </div>
 </div>

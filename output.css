@@ -21641,6 +21641,9 @@ video {
 :root {
   --background-url: url('/img/sunnytime.png');
   --color-bg: rgb(253, 245, 214);
+  --color-bg: rgb(253, 245, 214);
+  --color-600-eight: rgba(49, 130, 206, 1);
+  --color-600-transparent: rgba(49, 130, 206, 0);
   --color-cloud: rgba(255, 255, 255, 1);
   --color-cloud-transparent: rgb(255, 255, 255, 0);
   --color-cloud-seven: rgb(255, 255, 255, .7);
@@ -21654,6 +21657,8 @@ video {
 [data-theme="dark"] {
   --background-url: url('/img/nighttime.png');
   --color-bg: rgb(61, 100, 130);
+  --color-600-eight: rgba(203, 213, 224,1);
+  --color-600-transparent: rgba(203, 213, 224, 0);
   --color-cloud: rgba(110, 141, 163, 1);
   --color-cloud-transparent: rgba(110, 141, 163, 0);
   --color-cloud-seven: rgba(110, 141, 163, .7);
@@ -21664,8 +21669,17 @@ video {
   --color-contrast: #3182ce;
 }
 
+.rain-graph {
+  background: linear-gradient(180deg, var(--color-600-transparent) 0%, var(--color-600-eight) 3%, var(--color-600-transparent) 6%), linear-gradient(180deg, var(--color-600-transparent) 30%, var(--color-600-eight) 33%, var(--color-600-transparent) 36%), linear-gradient(180deg, var(--color-600-transparent) 60%, var(--color-600-eight) 63%, var(--color-600-transparent) 66%), linear-gradient(180deg, var(--color-600-transparent) 90%, var(--color-600-eight) 93%, var(--color-600-transparent) 96%);
+}
+
 body {
   height: -webkit-fill-avaliable;
+  position: absolute;
+}
+
+.sidebar {
+  background: var(--color-bg);
 }
 
 .sky {
@@ -21762,6 +21776,54 @@ body {
   top: -27.5px; left: auto; right: 7.5px;
 }
 
+.cloud div:nth-child(3) {
+  width: 100px; height: 30px;
+  background: var(--color-cloud);
+  border-radius: 100px;
+  position: relative;
+  top: -20px;
+  left: 80px;
+}
+
+.cloud div:nth-child(3):before, .cloud div:nth-child(3):after {
+  content: '';
+  position: absolute;
+  background: var(--color-cloud);
+  width: 50px; height: 40px;
+  position: absolute; top: -7.5px; left: 5px;
+  border-radius: 50px;
+  transform: rotate(15deg);
+}
+
+.cloud div:nth-child(3):after {
+  width: 60px; height: 60px;
+  top: -27.5px; left: auto; right: 7.5px;
+}
+
+.cloud div:nth-child(4) {
+  width: 100px; height: 30px;
+  background: var(--color-cloud);
+  border-radius: 100px;
+  position: relative;
+  top: -20px;
+  left: 80px;
+}
+
+.cloud div:nth-child(4):before, .cloud div:nth-child(4):after {
+  content: '';
+  position: absolute;
+  background: var(--color-cloud);
+  width: 50px; height: 40px;
+  position: absolute; top: -7.5px; left: 5px;
+  border-radius: 50px;
+  transform: rotate(15deg);
+}
+
+.cloud div:nth-child(4):after {
+  width: 60px; height: 60px;
+  top: -27.5px; left: auto; right: 7.5px;
+}
+
 #parallax-1 {
   fill: var(--color-cloud-seven);
 }
@@ -21840,6 +21902,15 @@ weather-daily {
 #nav-bar {
   background-color: var(--color-cloud);
   cursor: pointer;
+}
+
+#searchBig {
+  background-color: var(--color-bg);
+  cursor: pointer;
+}
+
+.searchInputBig {
+  background-color: var(--color-bg);
 }
 
 .border-500 {

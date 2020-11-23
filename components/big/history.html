@@ -1,0 +1,22 @@
+<div class="history grid bg-gray-200 rounded-xl h-16 items-center grid-cols-12">
+  <div class="col-span-1 p-4">
+    <div class="star ${i.favorite ? 'favorite' : 'not'} h-6 w-6 rounded-full hover:bg-gray-300 flex justify-center items-center" onclick="changeFavorite('${i.id}', event)">
+      <span style="color: ${i.favorite ? '#3182ce' : '#e2e8f0'};"><i class="fas fa-star"></i></span>
+    </div>
+  </div>
+  <div onclick="search('${weather.city_name}')" class="flex justify-between col-span-10 p-4">
+    <div class="flex justify-between self-start items-center">
+      <span class="text-2xl font-semibold text-gray-600">&nbsp${weather.city_name}&nbsp</span>
+      ${weather[0].icon ? `<img class="h-10 w-10" src="icons/${weather.current.weather[0].icon}.png" />` : ''}
+      ${weather.pop ? `<span class="text font-semibold text-blue-600"> &nbsp${weather.pop}</span>` : ''}
+    </div>
+    <div class="">
+      <span class="text-2xl font-semibold text-gray-600">${weathermath.toF(weather.current.temp)}°</span>
+    </div>
+  </div>
+  <div class="h-full col-span-1 pt-2 pr-2" onclick="deleteCity('${i.id}')">
+    <div class="h-6 w-6 rounded-full text-gray-500 bg-gray-300 flex justify-center items-center" onclick="deleteCity('${i.id}', event)">
+      <i class="fas fa-times"></i>
+    </div>
+  </div>
+</div>

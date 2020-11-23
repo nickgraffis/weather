@@ -1,0 +1,12 @@
+<div class="place-self-center w-full h-full flex items-center justify-center">
+  <span class="z-10 text-2xl text-gray-700 font-semibold">${extra.value}%</span>
+</div>
+<div class="relative flex items-center flex-col">
+  <div class="cloud">
+    ${extra.value > 20 ? `<div style="left: 12px; top: -44px;"></div>` : ''}
+    ${extra.value > 40 ? `<div style="left: -64px; top: 0px;"></div>` : ''}
+    ${extra.value > 60 ? `<div style="left: 47px; top: -150px;"></div>` : ''}
+    ${extra.value > 80 ? `<div style="left: 88px; top: 13px;"></div>` : ''}
+    ${extra.value >= 100 ? `<div style="left: 14px; top: -114px;"></div>` : ''}
+  </div>
+</div>

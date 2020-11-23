@@ -1,15 +1,17 @@
-<div class="flex flex-col justify-between items-center p-4 h-full">
-  <div class="grid grid-cols-8 mx-4 bg-white p-4 mb-4 rounded-xl text-blue-600">
+<div id="searchBig" class="w-3/12 flex flex-col p-4 mb-4 rounded-3xl text-blue-600 absolute z-10 mt-12">
+  <div class="grid grid-cols-8 self-start">
     <span onclick="search()" class="place-self-center text-md justify-self-start mx-4"><i class="fas fa-search"></i></span>
-    <input placeholder="Search for cities..." class="appearance-none w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none justify-self-stretch col-span-6" id="searchInput" type="text" placeholder="">
-    <div onclick="showHistory()" class="col-span-1 h-10 w-10 rounded-full justify-self-start place-self-center flex justify-center items-center hover:bg-blue-100">
+    <input placeholder="Search for cities..." class="searchInputBig place-self-center appearance-none w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none justify-self-stretch col-span-6" id="searchInput" type="text" placeholder="">
+    <div onclick="showHistoryBig()" class="place-self-center col-span-1 h-10 w-10 rounded-full justify-self-start flex justify-center items-center hover:bg-blue-100">
       <span class="text-md"><i class="fas fa-th-list"></i></span>
     </div>
   </div>
-  <div class="flex flex-col items-center w-full">
-    ${weather.current.weather[0].icon ? `<img class="inline-block align-middle h-48 w-48" src="/icons/${weather.current.weather[0].icon}.png" />` : ''}
-    <span class="color-500 text-6xl text-extrabold" style="font-size: 100px;">${weathermath.toF(weather.current.temp)}°</span>
-    <p class="color-500 text-lg place-self-start p-4 border-b-2 border-gray-300 w-full"><strong class="color-600">${moment(weather.current.dt).format('dddd')}</strong>, ${moment(weather.current.dt).format('LT')}</p>
+  <weather-history class="overflow-scroll"></weather-history>
+</div>
+<div class="flex flex-col justify-between p-4 items-center h-full">
+  <div class="flex flex-col items-center w-full" style="margin-top: 300px;">
+    <span class="color-500 text-6xl text-extrabold place-self-start" style="font-size: 100px;">${weathermath.toF(weather.current.temp)}°</span>
+    <p class="color-500 text-lg place-self-start p-4 border-b-2 border-gray-300 w-full"><strong class="color-600">${moment.tz(weather.current.dt * 1000, weather.timezone).format('dddd')}</strong>, ${moment.tz(weather.current.dt * 1000, weather.timezone).format('LT')}</p>
     <div class="place-self-start p-4">
       ${weather.current.weather.map(i => {
         return `  <p class="color-500 text-lg">It's <strong class="color-600">${i.description} ${i.icon ? `<img class="inline-block align-middle h-10 w-10" src="/icons/${i.icon}.png" />` : ''}</strong></p>`
@@ -17,6 +19,6 @@
     </div>
   </div>
   <div class="flex items-center justify-center h-40 w-full rounded-3xl m-4" style="background: url('${weather.picture}'); background-size: cover; background-repeat: no-repeat;">
-    <span class="text-white text-4xl text-bold">${capitolize(weather.city_name)}</span>
+    <span class="text-white text-4xl text-bold">${capitolize(weather.city_name)}, ${weather.country_name === 'US' ? weather.country_name + 'A' : weather.country_name}</span>
   </div>
 </div>

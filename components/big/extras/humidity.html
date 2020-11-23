@@ -1,0 +1,11 @@
+<div class="place-self-end w-full">
+  <div class="relative flex items-center flex-col">
+    <span class="text-4xl text-gray-700 place-self-start">${extra.value}%</span>
+    <div class="border-gray-400 border-4 w-full h-6 rounded-full my-4">
+      <div class="relative bg-blue-600 w-6 h-6 rounded-full" style="margin-top: -4px; margin-left: ${(extra.value / 100) * 255}px;"></div>
+    </div>
+    <div class="relative flex items-center flex-col">
+      <span class="z-10 text-2xl text-gray-700">${extra.value}% is ${weathermath.humidityChart(extra.value).string} ${weathermath.humidityChart(extra.value).emoji}</span>
+    </div>
+  </div>
+</div>

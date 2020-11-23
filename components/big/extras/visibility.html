@@ -1,1 +1,18 @@
-
+<div class="place-self-center w-full">
+  <div class="relative flex items-center flex-col">
+    <div class="absolute h-12 place-self-start rounded" style="top: 16px; width: ${(weathermath.metersToMile(extra.value) / 10) * 285}px;
+    background: linear-gradient(to right, #434190
+      ${weathermath.metersToMile(extra.value) >= 1 ? ' ,#5a67d8 ': ''}
+      ${weathermath.metersToMile(extra.value) >= 3 ? ' ,#7f9cf5 ' : ''}
+      ${weathermath.metersToMile(extra.value) >= 5 ? ' ,#c3dafe ' : ''}
+      ${weathermath.metersToMile(extra.value) >= 9 ? ' ,#ebf4ff ' : ''})"></div>
+    <div class="border-gray-400 border-4 w-full h-12 rounded my-4 flex z-10">
+      <div class="border-gray-400 border-r-4 h-full text-xs justify-center flex items-center" style="width: calc(.1 * 285px)">1mi</div>
+      <div class="border-gray-400 border-r-4 h-full text-xs justify-center flex items-center" style="width: calc(.2 * 285px)">3mi</div>
+      <div class="border-gray-400 border-r-4 h-full text-xs justify-center flex items-center" style="width: calc(.2 * 285px)">5mi</div>
+      <div class="border-gray-400 border-r-4 h-full text-xs justify-center flex items-center" style="width: calc(.3 * 285px)">9mi</div>
+      <div class="text-xs justify-center flex items-center" style="width: calc(.2 * 285px)">> 10mi</div>
+    </div>
+    <span class="z-10 text-2xl text-gray-700 font-semibold">${weathermath.metersToMile(extra.value).toFixed(2)} mi</span>
+  </div>
+</div>
